@@ -29,7 +29,7 @@ sequenceDiagram
 
     browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
     activate server
-    server-->>browser: ijij
+    server-->>browser: Redirect
     deactivate server
 
     Note right of browser: The browser is prompted to make new HTTP GET request to notes
