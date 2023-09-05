@@ -1,12 +1,20 @@
 import { useState } from "react";
 
-function getRandomInt(max) {
-  return Math.floor(Math.random() * max);
-}
+const Header = (props) => {
+  return (
+    <div>
+      <h1>{props.header}</h1>
+    </div>
+  );
+};
 
 const Button = (props) => (
   <button onClick={props.buttonClick}>{props.text}</button>
 );
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
 
 const App = () => {
   const anecdotes = [
@@ -28,13 +36,18 @@ const App = () => {
   const updatedVotes = [...allVotes];
   console.log("updatedVotes=", updatedVotes);
 
+  const [most, setMost] = useState(0);
+
   const voteAnecdote = () => {
     updatedVotes[selected] += 1;
     setVote(updatedVotes);
+    setMost(updatedVotes.indexOf(Math.max(...updatedVotes)));
   };
+  console.log("most", most);
 
   return (
     <div>
+      <Header header={"Anecdote of the day"} />
       {anecdotes[selected]}
       <br></br>
       Has {allVotes[selected]} votes.
@@ -44,6 +57,10 @@ const App = () => {
         buttonClick={() => setSelected(getRandomInt(numberOfAnecdotes))}
         text="next anecdote"
       />
+      <Header header={"Anecdote with most votes"} />
+      {anecdotes[most]}
+      <br></br>
+      has {updatedVotes[most]} votes
     </div>
   );
 };
