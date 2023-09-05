@@ -20,15 +20,29 @@ const App = () => {
     "The only way to go fast, is to go well.",
   ];
 
+  const numberOfAnecdotes = anecdotes.length;
+
   const [selected, setSelected] = useState(0);
+  const [allVotes, setVote] = useState(new Array(numberOfAnecdotes).fill(0));
+
+  const updatedVotes = [...allVotes];
+  console.log("updatedVotes=", updatedVotes);
+
+  const voteAnecdote = () => {
+    updatedVotes[selected] += 1;
+    setVote(updatedVotes);
+  };
 
   return (
     <div>
       {anecdotes[selected]}
       <br></br>
+      Has {allVotes[selected]} votes.
+      <br></br>
+      <Button buttonClick={voteAnecdote} text="vote" />
       <Button
-        buttonClick={() => setSelected(getRandomInt(anecdotes.length))}
-        text="good"
+        buttonClick={() => setSelected(getRandomInt(numberOfAnecdotes))}
+        text="next anecdote"
       />
     </div>
   );
