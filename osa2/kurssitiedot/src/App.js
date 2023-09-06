@@ -20,24 +20,18 @@ const Part = ({ part }) => {
   );
 };
 
-// const Total = (props) => {
-//   // console.log(
-//   //   "Total=",
-//   //   props.course.parts[0].exercises +
-//   //     props.course.parts[1].exercises +
-//   //     props.course.parts[2].exercises
-//   // );
-//   return (
-//     <div>
-//       <p>
-//         Number of exercises{" "}
-//         {props.course.parts[0].exercises +
-//           props.course.parts[1].exercises +
-//           props.course.parts[2].exercises}
-//       </p>
-//     </div>
-//   );
-// };
+const Total = ({ parts }) => {
+  const totalExercises = parts.reduce((sum, part) => {
+    return sum + part.exercises;
+  }, 0);
+  return (
+    <div>
+      <p>
+        <strong>Total of {totalExercises} exercises</strong>
+      </p>
+    </div>
+  );
+};
 
 const Course = ({ course }) => {
   const { name, parts } = course;
@@ -45,6 +39,7 @@ const Course = ({ course }) => {
     <div>
       <Header name={name} />
       <Content parts={parts} />
+      <Total parts={parts} />
     </div>
   );
 };
@@ -70,8 +65,8 @@ const App = () => {
         id: 3,
       },
       {
-        name: "Extra exercises",
-        exercises: 6,
+        name: "Redux",
+        exercises: 11,
         id: 4,
       },
     ],
