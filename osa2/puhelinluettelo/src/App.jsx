@@ -2,7 +2,7 @@ import { useState } from "react";
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { id: "artohellas", name: "Arto Hellas" },
+    { id: "ArtoHellas", name: "Arto Hellas" },
   ]);
   const [newName, setNewName] = useState("");
 
@@ -11,11 +11,15 @@ const App = () => {
     console.log("button clicked", event.target);
     const personObject = {
       name: newName,
-      id: newName.replace(" ", "").toLowerCase(),
+      id: newName.replace(" ", ""),
     };
 
-    setPersons(persons.concat(personObject));
-    setNewName("");
+    if (!persons.find((person) => person.id === personObject.id)) {
+      setPersons(persons.concat(personObject));
+      setNewName("");
+    } else {
+      alert(`${newName} is already added to phonebook`);
+    }
   };
 
   const Person = ({ person }) => {
