@@ -2,10 +2,18 @@ import { useState } from "react";
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { id: "ArtoHellas", name: "Arto Hellas", phonenumber: "040-1231244" },
+    { id: "ArtoHellas", name: "Arto Hellas", phonenumber: "040-123456" },
+    { id: "AdaLovelace", name: "Ada Lovelace", phonenumber: "39-44-5323523" },
+    { id: "DanAbramov", name: "Dan Abramov", phonenumber: "12-43-234345" },
+    {
+      id: "MaryPoppendieck",
+      name: "Mary Poppendieck",
+      phonenumber: "39-23-6423122",
+    },
   ]);
   const [newName, setNewName] = useState("");
   const [newPhonenumber, setNewPhonenumber] = useState("");
+  const [filter, setFilter] = useState("");
 
   const addName = (event) => {
     event.preventDefault();
@@ -26,6 +34,7 @@ const App = () => {
   };
 
   const Person = ({ person }) => {
+    //console.log("person", person);
     return (
       <div>
         {person.name} {person.phonenumber}
@@ -33,7 +42,7 @@ const App = () => {
     );
   };
 
-  const handlePersonChange = (event) => {
+  const handleNameChange = (event) => {
     console.log(event.target.value);
     setNewName(event.target.value);
   };
@@ -43,14 +52,33 @@ const App = () => {
     setNewPhonenumber(event.target.value);
   };
 
+  const handleFilterChange = (event) => {
+    console.log(event.target.value);
+    setFilter(event.target.value);
+  };
+
+  const filteredPersons = filter
+    ? persons.filter((person) =>
+        person.name.toLowerCase().includes(filter.toLowerCase())
+      )
+    : persons;
+
+  //console.log("filteredPersons", filteredPersons);
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>
+        Filter names with:{" "}
+        <input value={filter} onChange={handleFilterChange} />
+      </div>
+
+      <h2>Add a new name and phonenumber</h2>
       <form onSubmit={addName}>
         <div>
-          name: <input value={newName} onChange={handlePersonChange} />
+          New name: <input value={newName} onChange={handleNameChange} />
           <div>
-            number:
+            New number:{" "}
             <input value={newPhonenumber} onChange={handlePhonenumberChange} />
           </div>
         </div>
@@ -59,7 +87,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      {persons.map((person) => (
+      {filteredPersons.map((person) => (
         <Person key={person.id} person={person} />
       ))}
     </div>
