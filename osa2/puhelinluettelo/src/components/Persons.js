@@ -1,5 +1,3 @@
-//console.log("filteredPersons", filteredPersons);
-
 const Person = ({ person }) => {
   //console.log("person", person);
   const { name, phonenumber } = person;
