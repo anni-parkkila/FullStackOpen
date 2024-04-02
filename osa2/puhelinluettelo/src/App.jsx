@@ -27,11 +27,11 @@ const App = () => {
     //console.log("button clicked", event.target);
     const personObject = {
       name: newName,
-      id: newName.replace(" ", ""),
+      id: persons.length + 1,
       phonenumber: newPhonenumber,
     };
 
-    if (!persons.find((person) => person.id === personObject.id)) {
+    if (!persons.find((person) => person.name === personObject.name)) {
       setPersons(persons.concat(personObject));
       setNewName("");
       setNewPhonenumber("");
