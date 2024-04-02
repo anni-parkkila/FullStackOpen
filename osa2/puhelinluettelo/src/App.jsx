@@ -27,7 +27,6 @@ const App = () => {
     //console.log("button clicked", event.target);
     const personObject = {
       name: newName,
-      id: persons.length + 1,
       phonenumber: newPhonenumber,
     };
 
@@ -38,6 +37,12 @@ const App = () => {
     } else {
       alert(`${newName} is already added to phonebook`);
     }
+
+    axios
+    .post('http://localhost:3001/persons', personObject)
+    .then(response => {
+      console.log(response)
+    })
   };
 
   const handleNameChange = (event) => {
