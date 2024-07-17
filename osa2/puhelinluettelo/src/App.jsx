@@ -46,6 +46,21 @@ const App = () => {
     }
   };
 
+  const removePerson = (id) => {
+    console.log('removePerson', id)
+    const personToDelete = persons.find(person => person.id === id)
+    if (window.confirm(`Delete ${personToDelete.name}?`)) {
+      personsService
+        .remove(id)
+        .catch(error => {
+          console.log('failed')
+        })
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
+        })
+    }
+  }
+
   const handleNameChange = (event) => {
     //console.log(event.target.value);
     setNewName(event.target.value);
@@ -79,7 +94,7 @@ const App = () => {
 
       <h3>Numbers</h3>
 
-      <Persons filter={filter} persons={persons} />
+      <Persons filter={filter} persons={persons} removePerson={removePerson}/>
     </div>
   );
 };
