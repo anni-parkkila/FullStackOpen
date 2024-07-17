@@ -15,7 +15,7 @@ const App = () => {
     axios
       .get("http://localhost:3001/persons")
       .then((response) => {
-        console.log(response.data)
+        console.log("Response data", response.data)
         console.log("promise fulfilled");
         setPersons(response.data);
     });
@@ -34,15 +34,14 @@ const App = () => {
       setPersons(persons.concat(personObject));
       setNewName("");
       setNewPhonenumber("");
+      axios
+        .post('http://localhost:3001/persons', personObject)
+        .then(response => {
+          console.log(response)
+      })
     } else {
       alert(`${newName} is already added to phonebook`);
     }
-
-    axios
-    .post('http://localhost:3001/persons', personObject)
-    .then(response => {
-      console.log(response)
-    })
   };
 
   const handleNameChange = (event) => {
