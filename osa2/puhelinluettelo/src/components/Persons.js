@@ -1,14 +1,14 @@
-const Person = ({ person }) => {
+const Person = ({ person, removePerson }) => {
   //console.log("person", person);
   const { name, phonenumber } = person;
   return (
     <div>
-      {name} {phonenumber}
+      {name} {phonenumber} <button onClick={removePerson}>delete</button>
     </div>
   );
 };
 
-const Persons = ({ filter, persons }) => {
+const Persons = ({ filter, persons, removePerson }) => {
   //   console.log("Persons", persons);
   //   console.log("filter", filter);
   const filteredPersons = filter
@@ -20,7 +20,8 @@ const Persons = ({ filter, persons }) => {
   return (
     <div>
       {filteredPersons.map((person) => (
-        <Person key={person.id} person={person} />
+        <Person key={person.id} person={person} removePerson={() => removePerson(person.id)}
+        />
       ))}
     </div>
   );

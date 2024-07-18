@@ -1,40 +1,78 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import personsService from './services/persons'
+
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { id: "ArtoHellas", name: "Arto Hellas", phonenumber: "040-123456" },
-    { id: "AdaLovelace", name: "Ada Lovelace", phonenumber: "39-44-5323523" },
-    { id: "DanAbramov", name: "Dan Abramov", phonenumber: "12-43-234345" },
-    {
-      id: "MaryPoppendieck",
-      name: "Mary Poppendieck",
-      phonenumber: "39-23-6423122",
-    },
-  ]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newPhonenumber, setNewPhonenumber] = useState("");
   const [filter, setFilter] = useState("");
+
+  useEffect(() => {
+    console.log("Initial state from db.json:");
+    personsService
+      .getAll()
+      .then(initialPersons => {
+        console.log("Response data", initialPersons)
+        console.log("promise fulfilled");
+        setPersons(initialPersons);
+    });
+  }, []);
+  //console.log("render", persons.length, "persons");
 
   const addPerson = (event) => {
     event.preventDefault();
     //console.log("button clicked", event.target);
     const personObject = {
       name: newName,
-      id: newName.replace(" ", ""),
       phonenumber: newPhonenumber,
     };
 
-    if (!persons.find((person) => person.id === personObject.id)) {
+    if (!persons.find((person) => person.name === personObject.name)) {
       setPersons(persons.concat(personObject));
-      setNewName("");
-      setNewPhonenumber("");
+      personsService
+        .create(personObject)
+        .then(returnedPerson => {
+         //console.log("returnedPerson", returnedPerson)
+          setPersons(persons.concat(returnedPerson))
+          setNewName("");
+          setNewPhonenumber("");
+      })
     } else {
-      alert(`${newName} is already added to phonebook`);
+      if (window.confirm(`${newName} is already added to phonebook, replace the old one with a new number?`)) {
+        const personToUpdate = persons.find((person) => person.name === personObject.name);
+        //console.log('personToUpdate', personToUpdate)
+        const updatedPerson = { ...personToUpdate, phonenumber: personObject.phonenumber }
+        //console.log('updatedPerson', updatedPerson)
+        personsService
+          .update(personToUpdate.id, updatedPerson)
+          .then((returnedPerson) => {
+            //console.log('returnedPerson', returnedPerson)
+            setPersons(persons.map(person => person.id !== personToUpdate.id ? person :  returnedPerson));
+            setNewName("");
+            setNewPhonenumber("");
+          })
+      }
     }
   };
+
+  const removePerson = (id) => {
+    //console.log('removePerson', id)
+    const personToDelete = persons.find(person => person.id === id)
+    if (window.confirm(`Delete ${personToDelete.name}?`)) {
+      personsService
+        .remove(id)
+        .catch(error => {
+          console.log('failed')
+        })
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
+        })
+    }
+  }
 
   const handleNameChange = (event) => {
     //console.log(event.target.value);
@@ -69,7 +107,7 @@ const App = () => {
 
       <h3>Numbers</h3>
 
-      <Persons filter={filter} persons={persons} />
+      <Persons filter={filter} persons={persons} removePerson={removePerson}/>
     </div>
   );
 };
