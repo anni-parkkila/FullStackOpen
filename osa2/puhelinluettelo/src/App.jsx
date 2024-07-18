@@ -3,6 +3,7 @@ import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import personsService from './services/persons'
+import './index.css'
 
 
 const App = () => {
@@ -10,6 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newPhonenumber, setNewPhonenumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     console.log("Initial state from db.json:");
@@ -38,6 +40,7 @@ const App = () => {
         .then(returnedPerson => {
          //console.log("returnedPerson", returnedPerson)
           setPersons(persons.concat(returnedPerson))
+          setNotification(`${returnedPerson.name} was added to the phonebook`)
           setNewName("");
           setNewPhonenumber("");
       })
@@ -52,11 +55,15 @@ const App = () => {
           .then((returnedPerson) => {
             //console.log('returnedPerson', returnedPerson)
             setPersons(persons.map(person => person.id !== personToUpdate.id ? person :  returnedPerson));
+            setNotification(`Phonenumber for ${returnedPerson.name} was updated`)
             setNewName("");
             setNewPhonenumber("");
           })
       }
     }
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
   };
 
   const removePerson = (id) => {
@@ -70,8 +77,12 @@ const App = () => {
         })
         .then(() => {
           setPersons(persons.filter(person => person.id !== id))
+          setNotification(`${personToDelete.name} was removed from phonebook`)
         })
     }
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
   }
 
   const handleNameChange = (event) => {
@@ -89,9 +100,22 @@ const App = () => {
     setFilter(event.target.value);
   };
 
+  const Notification = ({ message }) => {
+    if (message === null) {
+      return null
+    }
+
+    return (
+      <div className="success">
+        {message}
+      </div>
+    )
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification} />
 
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
 
