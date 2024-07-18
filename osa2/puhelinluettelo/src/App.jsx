@@ -42,12 +42,25 @@ const App = () => {
           setNewPhonenumber("");
       })
     } else {
-      alert(`${newName} is already added to phonebook`);
+      if (window.confirm(`${newName} is already added to phonebook, replace the old one with a new number?`)) {
+        const personToUpdate = persons.find((person) => person.name === personObject.name);
+        //console.log('personToUpdate', personToUpdate)
+        const updatedPerson = { ...personToUpdate, phonenumber: personObject.phonenumber }
+        //console.log('updatedPerson', updatedPerson)
+        personsService
+          .update(personToUpdate.id, updatedPerson)
+          .then((returnedPerson) => {
+            //console.log('returnedPerson', returnedPerson)
+            setPersons(persons.map(person => person.id !== personToUpdate.id ? person :  returnedPerson));
+            setNewName("");
+            setNewPhonenumber("");
+          })
+      }
     }
   };
 
   const removePerson = (id) => {
-    console.log('removePerson', id)
+    //console.log('removePerson', id)
     const personToDelete = persons.find(person => person.id === id)
     if (window.confirm(`Delete ${personToDelete.name}?`)) {
       personsService

@@ -8,7 +8,7 @@ const Person = ({ person, removePerson }) => {
   );
 };
 
-const Persons = ({ key, filter, persons, removePerson }) => {
+const Persons = ({ filter, persons, removePerson }) => {
   //   console.log("Persons", persons);
   //   console.log("filter", filter);
   const filteredPersons = filter
