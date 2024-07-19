@@ -34,11 +34,10 @@ const App = () => {
     };
 
     if (!persons.find((person) => person.name === personObject.name)) {
-      setPersons(persons.concat(personObject));
       personsService
         .create(personObject)
         .then(returnedPerson => {
-         //console.log("returnedPerson", returnedPerson)
+          //console.log("returnedPerson", returnedPerson)
           setPersons(persons.concat(returnedPerson))
           setNotification(`${returnedPerson.name} was added to the phonebook`)
           setNewName("");
@@ -59,6 +58,10 @@ const App = () => {
             setNewName("");
             setNewPhonenumber("");
           })
+          .catch(error => {
+            console.log('update failed, person not found', error);
+            setNotification(`ERROR: could not update phonenumber, ${personToUpdate.name} has already been deleted from server`)
+          })
       }
     }
     setTimeout(() => {
@@ -73,11 +76,11 @@ const App = () => {
       personsService
         .remove(id)
         .then(() => {
-          setPersons(persons.filter(person => person.id !== id))
-          setNotification(`${personToDelete.name} was deleted from phonebook`)
+          setPersons(persons.filter(person => person.id !== id));
+          setNotification(`${personToDelete.name} was deleted from phonebook`);
         })
         .catch(error => {
-          console.log('deleting failed, person not found', error)
+          console.log('deleting failed, person not found', error);
           setNotification(`ERROR: ${personToDelete.name} has already been deleted from server`)
         })
     }
