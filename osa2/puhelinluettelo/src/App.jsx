@@ -72,12 +72,13 @@ const App = () => {
     if (window.confirm(`Delete ${personToDelete.name}?`)) {
       personsService
         .remove(id)
-        .catch(error => {
-          console.log('failed')
-        })
         .then(() => {
           setPersons(persons.filter(person => person.id !== id))
-          setNotification(`${personToDelete.name} was removed from phonebook`)
+          setNotification(`${personToDelete.name} was deleted from phonebook`)
+        })
+        .catch(error => {
+          console.log('deleting failed, person not found', error)
+          setNotification(`ERROR: ${personToDelete.name} has already been deleted from server`)
         })
     }
     setTimeout(() => {
@@ -105,11 +106,19 @@ const App = () => {
       return null
     }
 
-    return (
-      <div className="success">
-        {message}
-      </div>
-    )
+    if (message.includes("ERROR")) {
+      return (
+        <div className="error">
+          {message}
+        </div>
+      )
+    } else {
+        return (
+          <div className="success">
+            {message}
+          </div>
+        )
+      }
   }
 
   return (
