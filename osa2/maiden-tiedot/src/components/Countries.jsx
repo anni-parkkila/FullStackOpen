@@ -1,20 +1,53 @@
 const Country = ({ country }) => {
-  //const { name } = country;
+  const name = country.name.common;
   return (
     <div>
-      {country}
+      {name}
     </div>
   );
 };
 
+const CountryInfo = ({ country }) => {
+  const name = country.name.common;
+  const { capital, area, languages, flags } = country;
+  // console.log('capital', capital)
+  // console.log('area', area)
+  // console.log('languages', Object.values(languages))
+  // console.log('flags', flags.png)
+  const allLanguages = Object.values(languages);
+  return (
+    <div>
+      <h2>{name}</h2>
+      <div className="basic-info">
+        <h3>Basic information</h3>
+        <ul>
+          <li><strong>Capital:</strong> {capital}</li>
+          <li><strong>Area:</strong> {area}</li>
+        </ul>
+      </div>
+      <div className="languages">
+        <h3>Languages</h3>
+        <ul>
+          {allLanguages.map((language) => (
+            <li key={language}>{language}</li>
+          ))}
+        </ul>
+      </div>
+      <div className="flag">
+        <img src={flags.svg} alt={flags.alt}/>
+      </div>
+    </div>
+  )
+}
+
 const Countries = ({ filter, countries }) => {
-  console.log("countries", countries);
-  console.log("filter", filter);
+  //console.log("filter", filter);
   const filteredCountries = filter
     ? countries.filter((country) =>
-        country.toLowerCase().includes(filter.toLowerCase())
+        country.name.common.toLowerCase().includes(filter.toLowerCase())
       )
     : countries;
+    //console.log("filteredCountries", filteredCountries)
 
   if (filteredCountries.length > 10) {
     return (
@@ -22,15 +55,22 @@ const Countries = ({ filter, countries }) => {
         Too many matches, specify another filter
       </div>
     )
-  }
-
+  } else if (filteredCountries.length === 1) {
+    return (
+      <div>
+        {filteredCountries.map((country) => (
+        <CountryInfo key={country.cca3} country={country}/>
+      ))}
+      </div>
+    )
+  } else {
   return (
     <div>
       {filteredCountries.map((country) => (
-        <Country key={country.id} country={country}/>
+        <Country key={country.cca3} country={country}/>
       ))}
     </div>
-  );
+  );}
 };
 
 export default Countries;
