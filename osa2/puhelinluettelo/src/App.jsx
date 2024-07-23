@@ -3,6 +3,7 @@ import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import personsService from './services/persons'
+import './index.css'
 
 
 const App = () => {
@@ -10,6 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newPhonenumber, setNewPhonenumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     console.log("Initial state from db.json:");
@@ -32,12 +34,12 @@ const App = () => {
     };
 
     if (!persons.find((person) => person.name === personObject.name)) {
-      setPersons(persons.concat(personObject));
       personsService
         .create(personObject)
         .then(returnedPerson => {
-         //console.log("returnedPerson", returnedPerson)
+          //console.log("returnedPerson", returnedPerson)
           setPersons(persons.concat(returnedPerson))
+          setNotification(`${returnedPerson.name} was added to the phonebook`)
           setNewName("");
           setNewPhonenumber("");
       })
@@ -52,11 +54,19 @@ const App = () => {
           .then((returnedPerson) => {
             //console.log('returnedPerson', returnedPerson)
             setPersons(persons.map(person => person.id !== personToUpdate.id ? person :  returnedPerson));
+            setNotification(`Phonenumber for ${returnedPerson.name} was updated`)
             setNewName("");
             setNewPhonenumber("");
           })
+          .catch(error => {
+            console.log('update failed, person not found', error);
+            setNotification(`ERROR: could not update phonenumber, ${personToUpdate.name} has already been deleted from server`)
+          })
       }
     }
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
   };
 
   const removePerson = (id) => {
@@ -65,13 +75,18 @@ const App = () => {
     if (window.confirm(`Delete ${personToDelete.name}?`)) {
       personsService
         .remove(id)
-        .catch(error => {
-          console.log('failed')
-        })
         .then(() => {
-          setPersons(persons.filter(person => person.id !== id))
+          setPersons(persons.filter(person => person.id !== id));
+          setNotification(`${personToDelete.name} was deleted from phonebook`);
+        })
+        .catch(error => {
+          console.log('deleting failed, person not found', error);
+          setNotification(`ERROR: ${personToDelete.name} has already been deleted from server`)
         })
     }
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
   }
 
   const handleNameChange = (event) => {
@@ -89,9 +104,30 @@ const App = () => {
     setFilter(event.target.value);
   };
 
+  const Notification = ({ message }) => {
+    if (message === null) {
+      return null
+    }
+
+    if (message.includes("ERROR")) {
+      return (
+        <div className="error">
+          {message}
+        </div>
+      )
+    } else {
+        return (
+          <div className="success">
+            {message}
+          </div>
+        )
+      }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification} />
 
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
 
