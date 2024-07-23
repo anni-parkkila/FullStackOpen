@@ -1,8 +1,8 @@
-const Country = ({ country }) => {
+const Country = ({ country, handleFilterChange }) => {
   const name = country.name.common;
   return (
     <div>
-      {name}
+      {name} <button onClick={handleFilterChange} value={name}>show info</button>
     </div>
   );
 };
@@ -40,7 +40,7 @@ const CountryInfo = ({ country }) => {
   )
 }
 
-const Countries = ({ filter, countries }) => {
+const Countries = ({ filter, countries, handleFilterChange }) => {
   //console.log("filter", filter);
   const filteredCountries = filter
     ? countries.filter((country) =>
@@ -67,7 +67,7 @@ const Countries = ({ filter, countries }) => {
   return (
     <div>
       {filteredCountries.map((country) => (
-        <Country key={country.cca3} country={country}/>
+        <Country key={country.cca3} country={country} handleFilterChange={handleFilterChange} />
       ))}
     </div>
   );}
