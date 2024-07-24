@@ -18,7 +18,7 @@ button {
   color: var(--darkBlue);
 }
 
-.basic-info {
+.basic-info, .weather-info {
   ul {
     list-style-type: none;
     padding: 0;
