@@ -14,7 +14,7 @@ const App = () => {
   const [notification, setNotification] = useState(null);
 
   useEffect(() => {
-    console.log("Initial state from db.json:");
+    console.log("Initial state from server:");
     personsService
       .getAll()
       .then(initialPersons => {
