@@ -1,0 +1,41 @@
+:root {
+  font-family: Arial, Helvetica, sans-serif;
+  --darkBlue: #323c61;
+  --greyBlue: #69749d;
+  --lightGreyBlue: #bac1da;
+}
+
+h1, h2 {
+  color: var(--darkBlue);
+}
+
+h3 {
+  color: var(--greyBlue);
+}
+
+button {
+  background-color: var(--lightGreyBlue);
+  color: var(--darkBlue);
+}
+
+.basic-info, .weather-info {
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+.languages {
+  ul {
+    li::marker {
+      color: var(--greyBlue);
+    }
+  }
+}
+
+.flag {
+  img {
+    max-width: 20%;
+  }
+}
