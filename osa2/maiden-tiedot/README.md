@@ -1,8 +1,3 @@
-# React + Vite
+# Full Stack Open osa 2
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Tehtävät [2.18-2.20](https://fullstackopen.com/osa2/tyylien_lisaaminen_react_sovellukseen#tehtavat-2-18-2-20), maiden tiedot steps 1-3.
