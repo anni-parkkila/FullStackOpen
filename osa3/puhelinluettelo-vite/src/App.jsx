@@ -42,7 +42,11 @@ const App = () => {
           setNotification(`${returnedPerson.name} was added to the phonebook`)
           setNewName("");
           setNewPhonenumber("");
-      })
+        })
+        .catch(error => {
+          console.log(error.response.data)
+          setNotification(`ERROR: ${error.response.data.error}`)
+        })
     } else {
       if (window.confirm(`${newName} is already added to phonebook, replace the old one with a new number?`)) {
         const personToUpdate = persons.find((person) => person.name === personObject.name);
