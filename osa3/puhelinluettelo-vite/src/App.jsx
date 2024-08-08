@@ -64,7 +64,7 @@ const App = () => {
           })
           .catch(error => {
             console.log('update failed, person not found', error);
-            setNotification(`ERROR: could not update phonenumber, ${personToUpdate.name} has already been deleted from server`)
+            setNotification(`ERROR: could not update phonenumber, ${personObject.name} has already been deleted from server`)
           })
       }
     }
