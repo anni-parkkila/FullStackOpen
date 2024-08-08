@@ -1,5 +1,4 @@
 const Person = ({ person, removePerson }) => {
-  //console.log("person", person);
   const { name, phonenumber } = person;
   return (
     <div>
@@ -9,8 +8,6 @@ const Person = ({ person, removePerson }) => {
 };
 
 const Persons = ({ filter, persons, removePerson }) => {
-  //   console.log("Persons", persons);
-  //   console.log("filter", filter);
   const filteredPersons = filter
     ? persons.filter((person) =>
         person.name.toLowerCase().includes(filter.toLowerCase())
