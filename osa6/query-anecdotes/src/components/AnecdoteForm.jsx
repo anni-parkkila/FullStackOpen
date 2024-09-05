@@ -11,6 +11,13 @@ const AnecdoteForm = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['anecdotes'] })
     },
+    onError: (error) => {
+      console.log('error', error)
+      dispatch({ type: 'setNotification', payload: error.response.data.error })
+      setTimeout(() => {
+        dispatch({ type: 'clearNotification' })
+      }, 5000)
+    }
   })
 
   const addAnecdote = (event) => {
