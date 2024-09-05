@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import {
+  Routes, Route, Link
+} from 'react-router-dom'
 
 const Menu = () => {
   const padding = {
@@ -6,9 +9,9 @@ const Menu = () => {
   }
   return (
     <div>
-      <a href='#' style={padding}>anecdotes</a>
-      <a href='#' style={padding}>create new</a>
-      <a href='#' style={padding}>about</a>
+      <Link style={padding} to='/'>Anecdotes</Link>
+      <Link style={padding} to='/create'>Create new</Link>
+      <Link style={padding} to='/about'>About</Link>
     </div>
   )
 }
@@ -24,7 +27,7 @@ const AnecdoteList = ({ anecdotes }) => (
 
 const About = () => (
   <div>
-    <h2>About anecdote app</h2>
+    <h2>About Anecdote App</h2>
     <p>According to Wikipedia:</p>
 
     <em>An anecdote is a brief, revealing account of an individual person or an incident.
@@ -36,13 +39,18 @@ const About = () => (
   </div>
 )
 
-const Footer = () => (
-  <div>
-    Anecdote app for <a href='https://fullstackopen.com/'>Full Stack Open</a>.
+const Footer = () => {
+  const margin = {
+    marginTop: 10
+  }
+  return (
+    <div style={margin}>
+      Anecdote app for <a href='https://fullstackopen.com/'>Full Stack Open</a>.
 
-    See <a href='https://github.com/fullstack-hy2020/routed-anecdotes/blob/master/src/App.js'>https://github.com/fullstack-hy2020/routed-anecdotes/blob/master/src/App.js</a> for the source code.
-  </div>
-)
+      See <a href='https://github.com/fullstack-hy2020/routed-anecdotes/blob/master/src/App.js'>https://github.com/fullstack-hy2020/routed-anecdotes/blob/master/src/App.js</a> for the source code.
+    </div>
+  )
+}
 
 const CreateNew = (props) => {
   const [content, setContent] = useState('')
@@ -60,9 +68,11 @@ const CreateNew = (props) => {
     })
   }
 
+
+
   return (
     <div>
-      <h2>create a new anecdote</h2>
+      <h2>Create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
         <div>
           content
@@ -124,12 +134,17 @@ const App = () => {
 
   return (
     <div>
-      <h1>Software anecdotes</h1>
-      <Menu />
-      <AnecdoteList anecdotes={anecdotes} />
-      <About />
-      <CreateNew addNew={addNew} />
-      <Footer />
+
+      <div>
+        <h1>Software anecdotes</h1>
+        <Menu />
+        <Routes>
+          <Route path='/' element={<AnecdoteList anecdotes={anecdotes} />} />
+          <Route path='/create' element={<CreateNew addNew={addNew} />} />
+          <Route path='/about' element={<About />} />
+        </Routes>
+        <Footer />
+      </div>
     </div>
   )
 }
