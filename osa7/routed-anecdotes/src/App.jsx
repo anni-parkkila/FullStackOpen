@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import {
-  Routes, Route, Link, useMatch
+  Routes, Route, Link, useMatch, useNavigate
 } from 'react-router-dom'
 
 const Menu = () => {
@@ -66,6 +66,7 @@ const Footer = () => {
 }
 
 const CreateNew = (props) => {
+  const navigate = useNavigate()
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
@@ -79,6 +80,7 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    navigate('/')
   }
 
   return (
@@ -101,7 +103,14 @@ const CreateNew = (props) => {
       </form>
     </div>
   )
+}
 
+const Notification = ({ notification }) => {
+  return (
+    <div>
+      {notification}
+    </div>
+  )
 }
 
 const App = () => {
@@ -132,6 +141,10 @@ const App = () => {
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
     setAnecdotes(anecdotes.concat(anecdote))
+    setNotification(`A new anecdote ${anecdote.content}" was added to the list!`)
+    setTimeout(() => {
+      setNotification('')
+    }, 5000)
   }
 
   const anecdoteById = (id) =>
@@ -149,18 +162,16 @@ const App = () => {
 
   return (
     <div>
-
-      <div>
-        <h1>Software anecdotes</h1>
-        <Menu />
-        <Routes>
-          <Route path='/' element={<AnecdoteList anecdotes={anecdotes} />} />
-          <Route path="/anecdotes/:id" element={<Anecdote anecdote={anecdote} />} />
-          <Route path='/create' element={<CreateNew addNew={addNew} />} />
-          <Route path='/about' element={<About />} />
-        </Routes>
-        <Footer />
-      </div>
+      <h1>Software anecdotes</h1>
+      <Menu />
+      <Notification notification={notification}/>
+      <Routes>
+        <Route path='/' element={<AnecdoteList anecdotes={anecdotes} />} />
+        <Route path="/anecdotes/:id" element={<Anecdote anecdote={anecdote} />} />
+        <Route path='/create' element={<CreateNew addNew={addNew} />} />
+        <Route path='/about' element={<About />} />
+      </Routes>
+      <Footer />
     </div>
   )
 }
