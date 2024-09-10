@@ -10,90 +10,81 @@ const User = require('../models/user')
 const api = supertest(app)
 
 describe('when there is initially one user in db', () => {
-  beforeEach(async () => {
-    await User.deleteMany({})
+    beforeEach(async () => {
+        await User.deleteMany({})
 
-    const passwordHash = await bcrypt.hash('sekret', 10)
-    const user = new User({ username: 'root', passwordHash })
+        const passwordHash = await bcrypt.hash('sekret', 10)
+        const user = new User({ username: 'root', passwordHash })
 
-    await user.save()
-  })
-
-  describe('login', () => {
-    test('succeeds with the existing username', async () => {
-      const user = {
-        username: 'root',
-        password: 'sekret'
-      }
-
-      const result = await api
-        .post('/api/login')
-        .send(user)
-        .expect(200)
-
-      assert(result.body.token)
-      assert.strictEqual(result.body.username, user.username)
+        await user.save()
     })
 
-    test('succeeds with a fresh username', async () => {
-      await helper.usersInDb()
+    describe('login', () => {
+        test('succeeds with the existing username', async () => {
+            const user = {
+                username: 'root',
+                password: 'sekret',
+            }
 
-      const newUser = {
-        username: 'holmes',
-        name: 'Sherlock Holmes',
-        password: 'sherlocked',
-      }
+            const result = await api.post('/api/login').send(user).expect(200)
 
-      await api
-        .post('/api/users')
-        .send(newUser)
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
+            assert(result.body.token)
+            assert.strictEqual(result.body.username, user.username)
+        })
 
-      const usersAtEnd = await helper.usersInDb()
-      const usernames = usersAtEnd.map(u => u.username)
-      assert(usernames.includes(newUser.username))
+        test('succeeds with a fresh username', async () => {
+            await helper.usersInDb()
 
-      const result = await api
-        .post('/api/login')
-        .send(newUser)
-        .expect(200)
+            const newUser = {
+                username: 'holmes',
+                name: 'Sherlock Holmes',
+                password: 'sherlocked',
+            }
 
-      assert(result.body.token)
-      assert.strictEqual(result.body.username, newUser.username)
+            await api
+                .post('/api/users')
+                .send(newUser)
+                .expect(201)
+                .expect('Content-Type', /application\/json/)
+
+            const usersAtEnd = await helper.usersInDb()
+            const usernames = usersAtEnd.map((u) => u.username)
+            assert(usernames.includes(newUser.username))
+
+            const result = await api
+                .post('/api/login')
+                .send(newUser)
+                .expect(200)
+
+            assert(result.body.token)
+            assert.strictEqual(result.body.username, newUser.username)
+        })
+
+        test('fails if password is incorrect', async () => {
+            const user = {
+                username: 'root',
+                password: 'sikrit',
+            }
+
+            const result = await api.post('/api/login').send(user).expect(401)
+
+            assert(!result.body.token)
+            assert(result.body.error.includes('invalid username or password'))
+        })
+
+        test('fails if username is incorrect', async () => {
+            const user = {
+                username: 'rot',
+                password: 'sekret',
+            }
+
+            const result = await api.post('/api/login').send(user).expect(401)
+
+            assert(!result.body.token)
+            assert(result.body.error.includes('invalid username or password'))
+        })
     })
-
-    test('fails if password is incorrect', async () => {
-      const user = {
-        username: 'root',
-        password: 'sikrit'
-      }
-
-      const result = await api
-        .post('/api/login')
-        .send(user)
-        .expect(401)
-
-      assert(!result.body.token)
-      assert(result.body.error.includes('invalid username or password'))
+    after(async () => {
+        await mongoose.connection.close()
     })
-
-    test('fails if username is incorrect', async () => {
-      const user = {
-        username: 'rot',
-        password: 'sekret'
-      }
-
-      const result = await api
-        .post('/api/login')
-        .send(user)
-        .expect(401)
-
-      assert(!result.body.token)
-      assert(result.body.error.includes('invalid username or password'))
-    })
-  })
-  after(async () => {
-    await mongoose.connection.close()
-  })
 })
