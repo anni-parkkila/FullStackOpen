@@ -1,12 +1,11 @@
 import { useState, useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
-import Blog from './components/Blog'
 import BlogList from './components/BlogList'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import Notification from './components/Notification'
-import { initializeBlogs, createBlog } from './reducers/blogReducer'
+import { initializeBlogs } from './reducers/blogReducer'
 import { newNotification } from './reducers/notificationReducer'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -51,24 +50,7 @@ const App = () => {
     }
   }
 
-  const addBlog = (blogObject) => {
-    blogFormRef.current.toggleVisibility()
-    dispatch(createBlog(blogObject))
-    dispatch(
-      newNotification(
-        `"${blogObject.title}" by ${blogObject.author} was added to list`,
-        5
-      )
-    )
-    // .catch((error) => {
-    //   dispatch(
-    //     newNotification(
-    //       'ERROR: all fields must be filled in and be min. 3 characters long',
-    //       5
-    //     )
-    //   )
-    // })
-  }
+  const toggleVisibility = () => blogFormRef.current.toggleVisibility()
 
   // const addLike = (blogObject) => {
   //   blogService.update(blogObject.id, blogObject).then((returnedBlog) => {
@@ -150,7 +132,7 @@ const App = () => {
         <button onClick={logoutButton}>logout</button>
       </div>
       <Togglable buttonLabel="Add a new blog" ref={blogFormRef}>
-        <BlogForm createBlog={addBlog} />
+        <BlogForm toggle={toggleVisibility} />
       </Togglable>
       <BlogList user={user} />
     </div>
