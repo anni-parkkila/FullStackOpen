@@ -1,17 +1,18 @@
 import { useState, useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import Blog from './components/Blog'
+import BlogList from './components/BlogList'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import Notification from './components/Notification'
+import { initializeBlogs, createBlog } from './reducers/blogReducer'
 import { newNotification } from './reducers/notificationReducer'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import './index.css'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -20,7 +21,7 @@ const App = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
+    dispatch(initializeBlogs())
   }, [])
 
   useEffect(() => {
@@ -52,67 +53,63 @@ const App = () => {
 
   const addBlog = (blogObject) => {
     blogFormRef.current.toggleVisibility()
-    blogService
-      .create(blogObject)
-      .then((returnedBlog) => {
-        dispatch(
-          newNotification(
-            `"${returnedBlog.title}" by ${returnedBlog.author} was added to list`,
-            5
-          )
-        )
-        setBlogs(blogs.concat(returnedBlog))
-      })
-      .catch((error) => {
-        dispatch(
-          newNotification(
-            'ERROR: all fields must be filled in and be min. 3 characters long',
-            5
-          )
-        )
-      })
-  }
-
-  const addLike = (blogObject) => {
-    blogService.update(blogObject.id, blogObject).then((returnedBlog) => {
-      setBlogs(
-        blogs.map((blog) => (blog.id !== blogObject.id ? blog : returnedBlog))
-      )
-    })
-  }
-
-  const removeBlog = (id) => {
-    const blogToRemove = blogs.find((blog) => blog.id === id)
-
-    if (
-      window.confirm(
-        `Remove blog "${blogToRemove.title}" by ${blogToRemove.author}?`,
+    dispatch(createBlog(blogObject))
+    dispatch(
+      newNotification(
+        `"${blogObject.title}" by ${blogObject.author} was added to list`,
         5
       )
-    ) {
-      blogService
-        .remove(blogToRemove.id)
-        .then(() => {
-          setBlogs(blogs.filter((blog) => blog.id !== id))
-          dispatch(
-            newNotification(`Blog "${blogToRemove.title}" was removed`, 5)
-          )
-        })
-        .catch((error) => {
-          console.log('removing failed:', error)
-          if (error.response.status === 401) {
-            dispatch(
-              newNotification(
-                'ERROR: blogs may only be removed by the user who added them',
-                5
-              )
-            )
-          } else {
-            dispatch(newNotification(`ERROR: ${error.message}`, 5))
-          }
-        })
-    }
+    )
+    // .catch((error) => {
+    //   dispatch(
+    //     newNotification(
+    //       'ERROR: all fields must be filled in and be min. 3 characters long',
+    //       5
+    //     )
+    //   )
+    // })
   }
+
+  // const addLike = (blogObject) => {
+  //   blogService.update(blogObject.id, blogObject).then((returnedBlog) => {
+  //     setBlogs(
+  //       blogs.map((blog) => (blog.id !== blogObject.id ? blog : returnedBlog))
+  //     )
+  //   })
+  // }
+
+  // const removeBlog = (id) => {
+  //   const blogToRemove = blogs.find((blog) => blog.id === id)
+
+  //   if (
+  //     window.confirm(
+  //       `Remove blog "${blogToRemove.title}" by ${blogToRemove.author}?`,
+  //       5
+  //     )
+  //   ) {
+  //     blogService
+  //       .remove(blogToRemove.id)
+  //       .then(() => {
+  //         setBlogs(blogs.filter((blog) => blog.id !== id))
+  //         dispatch(
+  //           newNotification(`Blog "${blogToRemove.title}" was removed`, 5)
+  //         )
+  //       })
+  //       .catch((error) => {
+  //         console.log('removing failed:', error)
+  //         if (error.response.status === 401) {
+  //           dispatch(
+  //             newNotification(
+  //               'ERROR: blogs may only be removed by the user who added them',
+  //               5
+  //             )
+  //           )
+  //         } else {
+  //           dispatch(newNotification(`ERROR: ${error.message}`, 5))
+  //         }
+  //       })
+  //   }
+  // }
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value)
@@ -155,19 +152,7 @@ const App = () => {
       <Togglable buttonLabel="Add a new blog" ref={blogFormRef}>
         <BlogForm createBlog={addBlog} />
       </Togglable>
-      <div className="bloglist">
-        {blogs
-          .sort((a, b) => b.likes - a.likes)
-          .map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              updateLikes={addLike}
-              removeBlog={() => removeBlog(blog.id)}
-              user={user}
-            />
-          ))}
-      </div>
+      <BlogList user={user} />
     </div>
   )
 }
