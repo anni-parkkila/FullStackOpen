@@ -1,10 +1,7 @@
-import { useSelector, useDispatch } from 'react-redux'
-import { Routes, Route, useMatch, Link } from 'react-router-dom'
-import Blog from './Blog'
-import { likeBlog, removeBlog } from '../reducers/blogReducer'
-import { newNotification } from '../reducers/notificationReducer'
+import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 
-const BlogList = ({ user }) => {
+const BlogList = () => {
   const blogs = useSelector((state) => state.blogs)
 
   return (

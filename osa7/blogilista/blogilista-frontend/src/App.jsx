@@ -122,16 +122,16 @@ const App = () => {
         <Route
           path="/blogs/:id"
           element={
-            blog ? (
-              <Blog
-                blog={blog}
-                updateLikes={addLike}
-                removeBlog={deleteBlog}
-                user={loggedUser}
-              />
-            ) : (
-              <Navigate replace to="/" />
-            )
+            //blog ? (
+            <Blog
+              blog={blog}
+              updateLikes={addLike}
+              removeBlog={deleteBlog}
+              user={loggedUser}
+            />
+            //) : (
+            //<Navigate replace to="/" />
+            //)
           }
         />
       </Routes>

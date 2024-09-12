@@ -17,6 +17,10 @@ const Blog = ({ blog, updateLikes, removeBlog, user }) => {
     removeBlog(blog)
   }
 
+  const cid = (max) => {
+    return Math.floor(Math.random() * max)
+  }
+
   if (!blog) return null
 
   return (
@@ -39,6 +43,14 @@ const Blog = ({ blog, updateLikes, removeBlog, user }) => {
           delete
         </button>
       )}
+      <div style={{ marginTop: 10 }}>
+        <h3>Comments</h3>
+        <ul>
+          {blog.comments.map((comment) => (
+            <li key={cid(1000)}>{comment}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   )
 }
