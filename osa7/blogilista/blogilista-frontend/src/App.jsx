@@ -6,14 +6,14 @@ import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import Notification from './components/Notification'
 import { initializeBlogs } from './reducers/blogReducer'
-import { setUser } from './reducers/userReducer'
+import { setLoggedUser } from './reducers/loginReducer'
 import blogService from './services/blogs'
 import './index.css'
 
 const App = () => {
   const blogFormRef = useRef()
   const dispatch = useDispatch()
-  const user = useSelector((state) => state.user)
+  const loggedUser = useSelector((state) => state.loggedUser)
 
   useEffect(() => {
     dispatch(initializeBlogs())
@@ -23,7 +23,7 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedPlokiappUser')
     if (loggedUserJSON) {
       const loggedUser = JSON.parse(loggedUserJSON)
-      dispatch(setUser(loggedUser))
+      dispatch(setLoggedUser(loggedUser))
       blogService.setToken(loggedUser.token)
     }
   }, [])
@@ -32,10 +32,10 @@ const App = () => {
 
   const logoutButton = () => {
     window.localStorage.removeItem('loggedPlokiappUser')
-    dispatch(setUser(null))
+    dispatch(setLoggedUser(null))
   }
 
-  if (user === null) {
+  if (loggedUser === null) {
     return (
       <div>
         <h1>Bloglist</h1>
@@ -51,13 +51,13 @@ const App = () => {
       <h2>Blogs</h2>
       <Notification />
       <div className="user">
-        {user.name} logged in
+        {loggedUser.name} logged in
         <button onClick={logoutButton}>logout</button>
       </div>
       <Togglable buttonLabel="Add a new blog" ref={blogFormRef}>
         <BlogForm toggle={toggleVisibility} />
       </Togglable>
-      <BlogList user={user} />
+      <BlogList user={loggedUser} />
     </div>
   )
 }
