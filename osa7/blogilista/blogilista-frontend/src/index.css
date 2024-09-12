@@ -20,6 +20,15 @@
   max-width: 50%;
 }
 
+.navBar {
+  color: rgb(0, 0, 0);
+  background: rgb(170, 170, 170);
+  font-size: 15px;
+  padding: 5px;
+  margin: 20px 0px;
+  max-width: 70%;
+}
+
 .user {
   color: rgb(143, 130, 46);
   background: rgb(242, 236, 213);

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Routes, Route, useMatch, Navigate } from 'react-router-dom'
+import { Routes, Route, useMatch, Navigate, Link } from 'react-router-dom'
 
 import Blog from './components/Blog'
 import BlogList from './components/BlogList'
@@ -89,12 +89,21 @@ const App = () => {
 
   return (
     <div>
-      <h1>Blogs App</h1>
-      <Notification />
-      <div className="user">
+      <div className="navBar">
+        <Link style={{ padding: 5 }} to="/">
+          Blogs
+        </Link>
+        <Link style={{ padding: 5, marginRight: 30 }} to="/users">
+          Users
+        </Link>
         {loggedUser.name} logged in
-        <button onClick={logoutButton}>logout</button>
+        <button style={{ marginLeft: 5 }} onClick={logoutButton}>
+          logout
+        </button>
       </div>
+
+      <h1>Blog App</h1>
+      <Notification />
 
       <Routes>
         <Route

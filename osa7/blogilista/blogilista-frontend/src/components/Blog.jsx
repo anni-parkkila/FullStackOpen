@@ -1,8 +1,6 @@
 const Blog = ({ blog, updateLikes, removeBlog, user }) => {
   const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 5,
-    marginBottom: 5,
+    marginLeft: 5,
     maxWidth: 500,
   }
 
