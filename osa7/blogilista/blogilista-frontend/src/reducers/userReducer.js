@@ -1,34 +1,25 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { newNotification } from './notificationReducer'
-import loginService from '../services/login'
-import blogService from '../services/blogs'
+import userService from '../services/users'
 
 const userSlice = createSlice({
-  name: 'user',
-  initialState: null,
+  name: 'users',
+  initialState: [],
   reducers: {
-    setUser(state, action) {
+    appendUser(state, action) {
+      state.push(action.payload)
+    },
+    setUsers(state, action) {
       return action.payload
     },
   },
 })
 
-export const { setUser } = userSlice.actions
+export const { appendUser, setUsers } = userSlice.actions
 
-export const loginUser = (username, password) => {
+export const initializeUsers = () => {
   return async (dispatch) => {
-    try {
-      const user = await loginService.login({
-        username,
-        password,
-      })
-      window.localStorage.setItem('loggedPlokiappUser', JSON.stringify(user))
-      blogService.setToken(user.token)
-      dispatch(setUser(user))
-      dispatch(newNotification('Login successful', 5))
-    } catch (exception) {
-      dispatch(newNotification('ERROR: Wrong username or password', 5))
-    }
+    const users = await userService.getAll()
+    dispatch(setUsers(users.sort((a, b) => b.blogs.length - a.blogs.length)))
   }
 }
 
