@@ -1,12 +1,13 @@
 import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import { Routes, Route, useMatch } from 'react-router-dom'
 
 import BlogList from './components/BlogList'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import User from './components/User'
 import UserList from './components/UserList'
 import { initializeBlogs } from './reducers/blogReducer'
 import { initializeUsers } from './reducers/userReducer'
@@ -18,6 +19,7 @@ const App = () => {
   const blogFormRef = useRef()
   const dispatch = useDispatch()
   const loggedUser = useSelector((state) => state.loggedUser)
+  const users = useSelector((state) => state.users)
 
   useEffect(() => {
     dispatch(initializeBlogs())
@@ -34,6 +36,11 @@ const App = () => {
   }, [])
 
   const toggleVisibility = () => blogFormRef.current.toggleVisibility()
+
+  const match = useMatch('/users/:id')
+  const user = match
+    ? users.find((user) => user.id === String(match.params.id))
+    : null
 
   const logoutButton = () => {
     window.localStorage.removeItem('loggedPlokiappUser')
@@ -52,31 +59,30 @@ const App = () => {
   }
 
   return (
-    <Router>
-      <div>
-        <h2>Blogs</h2>
-        <Notification />
-        <div className="user">
-          {loggedUser.name} logged in
-          <button onClick={logoutButton}>logout</button>
-        </div>
-
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <div>
-                <Togglable buttonLabel="Add a new blog" ref={blogFormRef}>
-                  <BlogForm toggle={toggleVisibility} />
-                </Togglable>
-                <BlogList user={loggedUser} />
-              </div>
-            }
-          />
-          <Route path="/users" element={<UserList />} />
-        </Routes>
+    <div>
+      <h1>Blogs App</h1>
+      <Notification />
+      <div className="user">
+        {loggedUser.name} logged in
+        <button onClick={logoutButton}>logout</button>
       </div>
-    </Router>
+
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <div>
+              <Togglable buttonLabel="Add a new blog" ref={blogFormRef}>
+                <BlogForm toggle={toggleVisibility} />
+              </Togglable>
+              <BlogList user={loggedUser} />
+            </div>
+          }
+        />
+        <Route path="/users" element={<UserList users={users} />} />
+        <Route path="/users/:id" element={<User user={user} />} />
+      </Routes>
+    </div>
   )
 }
 
