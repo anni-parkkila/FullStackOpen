@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Routes, Route, useMatch } from 'react-router-dom'
+import { Routes, Route, useMatch, Navigate } from 'react-router-dom'
 
+import Blog from './components/Blog'
 import BlogList from './components/BlogList'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
@@ -9,9 +10,10 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import User from './components/User'
 import UserList from './components/UserList'
-import { initializeBlogs } from './reducers/blogReducer'
+import { initializeBlogs, likeBlog, removeBlog } from './reducers/blogReducer'
 import { initializeUsers } from './reducers/userReducer'
 import { setLoggedUser } from './reducers/loginReducer'
+import { newNotification } from './reducers/notificationReducer'
 import blogService from './services/blogs'
 import './index.css'
 
@@ -20,6 +22,7 @@ const App = () => {
   const dispatch = useDispatch()
   const loggedUser = useSelector((state) => state.loggedUser)
   const users = useSelector((state) => state.users)
+  const blogs = useSelector((state) => state.blogs)
 
   useEffect(() => {
     dispatch(initializeBlogs())
@@ -35,11 +38,37 @@ const App = () => {
     }
   }, [])
 
+  const addLike = (blog) => {
+    dispatch(likeBlog(blog))
+    dispatch(
+      newNotification(`You liked blog "${blog.title}" by ${blog.author}`, 5)
+    )
+  }
+
+  const deleteBlog = (blog) => {
+    const id = blog.id
+    const blogToRemove = blogs.find((b) => b.id === id)
+
+    if (
+      window.confirm(
+        `Remove blog "${blogToRemove.title}" by ${blogToRemove.author}?`
+      )
+    ) {
+      dispatch(removeBlog(blog))
+      dispatch(newNotification(`Blog "${blogToRemove.title}" was removed`, 5))
+    }
+  }
+
   const toggleVisibility = () => blogFormRef.current.toggleVisibility()
 
-  const match = useMatch('/users/:id')
-  const user = match
-    ? users.find((user) => user.id === String(match.params.id))
+  const matchUser = useMatch('/users/:id')
+  const user = matchUser
+    ? users.find((user) => user.id === String(matchUser.params.id))
+    : null
+
+  const matchBlog = useMatch('/blogs/:id')
+  const blog = matchBlog
+    ? blogs.find((blog) => blog.id === String(matchBlog.params.id))
     : null
 
   const logoutButton = () => {
@@ -81,6 +110,21 @@ const App = () => {
         />
         <Route path="/users" element={<UserList users={users} />} />
         <Route path="/users/:id" element={<User user={user} />} />
+        <Route
+          path="/blogs/:id"
+          element={
+            blog ? (
+              <Blog
+                blog={blog}
+                updateLikes={addLike}
+                removeBlog={deleteBlog}
+                user={loggedUser}
+              />
+            ) : (
+              <Navigate replace to="/" />
+            )
+          }
+        />
       </Routes>
     </div>
   )
