@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux'
 import Blog from './Blog'
-import { likeBlog } from '../reducers/blogReducer'
+import { likeBlog, removeBlog } from '../reducers/blogReducer'
 import { newNotification } from '../reducers/notificationReducer'
 
 const BlogList = ({ user }) => {
@@ -14,6 +14,20 @@ const BlogList = ({ user }) => {
     )
   }
 
+  const deleteBlog = (blog) => {
+    const id = blog.id
+    const blogToRemove = blogs.find((b) => b.id === id)
+
+    if (
+      window.confirm(
+        `Remove blog "${blogToRemove.title}" by ${blogToRemove.author}?`
+      )
+    ) {
+      dispatch(removeBlog(blog))
+      dispatch(newNotification(`Blog "${blogToRemove.title}" was removed`, 5))
+    }
+  }
+
   return (
     <div className="bloglist">
       {blogs.map((blog) => (
@@ -21,7 +35,7 @@ const BlogList = ({ user }) => {
           key={blog.id}
           blog={blog}
           updateLikes={addLike}
-          // removeBlog={() => removeBlog(blog.id)}
+          removeBlog={deleteBlog}
           user={user}
         />
       ))}

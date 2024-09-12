@@ -33,7 +33,26 @@ export const createBlog = (content) => {
 export const likeBlog = (blog) => {
   return async (dispatch) => {
     const id = blog.id
-    const changedBlog = await blogService.update(id, blog)
+    const newBlog = {
+      ...blog,
+      likes: blog.likes + 1,
+    }
+    const changedBlog = await blogService.update(id, newBlog)
+    const updatedBlogs = await blogService.getAll()
+    dispatch(
+      setBlogs(
+        updatedBlogs
+          .map((blog) => (blog.id !== id ? blog : changedBlog))
+          .sort((a, b) => b.likes - a.likes)
+      )
+    )
+  }
+}
+
+export const removeBlog = (blog) => {
+  return async (dispatch) => {
+    const id = blog.id
+    await blogService.remove(id)
     const updatedBlogs = await blogService.getAll()
     dispatch(
       setBlogs(

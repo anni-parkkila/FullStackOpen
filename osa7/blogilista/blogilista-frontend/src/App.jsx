@@ -52,47 +52,6 @@ const App = () => {
 
   const toggleVisibility = () => blogFormRef.current.toggleVisibility()
 
-  // const addLike = (blogObject) => {
-  //   blogService.update(blogObject.id, blogObject).then((returnedBlog) => {
-  //     setBlogs(
-  //       blogs.map((blog) => (blog.id !== blogObject.id ? blog : returnedBlog))
-  //     )
-  //   })
-  // }
-
-  // const removeBlog = (id) => {
-  //   const blogToRemove = blogs.find((blog) => blog.id === id)
-
-  //   if (
-  //     window.confirm(
-  //       `Remove blog "${blogToRemove.title}" by ${blogToRemove.author}?`,
-  //       5
-  //     )
-  //   ) {
-  //     blogService
-  //       .remove(blogToRemove.id)
-  //       .then(() => {
-  //         setBlogs(blogs.filter((blog) => blog.id !== id))
-  //         dispatch(
-  //           newNotification(`Blog "${blogToRemove.title}" was removed`, 5)
-  //         )
-  //       })
-  //       .catch((error) => {
-  //         console.log('removing failed:', error)
-  //         if (error.response.status === 401) {
-  //           dispatch(
-  //             newNotification(
-  //               'ERROR: blogs may only be removed by the user who added them',
-  //               5
-  //             )
-  //           )
-  //         } else {
-  //           dispatch(newNotification(`ERROR: ${error.message}`, 5))
-  //         }
-  //       })
-  //   }
-  // }
-
   const handleUsernameChange = (event) => {
     setUsername(event.target.value)
   }

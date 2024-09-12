@@ -16,9 +16,13 @@ const Blog = ({ blog, updateLikes, removeBlog, user }) => {
     event.preventDefault()
     updateLikes({
       ...blog,
-      likes: blog.likes + 1,
       user: blog.user.id,
     })
+  }
+
+  const deleteBlog = (event) => {
+    event.preventDefault()
+    removeBlog(blog)
   }
 
   const toggleVisibility = () => {
@@ -48,7 +52,7 @@ const Blog = ({ blog, updateLikes, removeBlog, user }) => {
           Added by: {blog.user.name}
           <br />
           {user.username === blog.user.username && (
-            <button className="removeButton" onClick={removeBlog}>
+            <button className="removeButton" onClick={deleteBlog}>
               delete
             </button>
           )}
