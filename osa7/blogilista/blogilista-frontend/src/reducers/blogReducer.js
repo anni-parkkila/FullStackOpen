@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import blogService from '../services/blogs'
+import { newNotification } from './notificationReducer'
 
 const blogSlice = createSlice({
   name: 'blogs',
@@ -25,8 +26,12 @@ export const initializeBlogs = () => {
 
 export const createBlog = (content) => {
   return async (dispatch) => {
-    const newBlog = await blogService.create(content)
-    dispatch(appendBlog(newBlog))
+    try {
+      const newBlog = await blogService.create(content)
+      dispatch(appendBlog(newBlog))
+    } catch (exception) {
+      dispatch(newNotification(`ERROR: All fields must be filled`, 5))
+    }
   }
 }
 

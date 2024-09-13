@@ -1,12 +1,8 @@
 import { useState } from 'react'
+import { Button, Form, ListGroup } from 'react-bootstrap'
 
 const Blog = ({ blog, updateLikes, updateComments, removeBlog, user }) => {
   const [newComment, setNewComment] = useState('')
-
-  const blogStyle = {
-    marginLeft: 5,
-    maxWidth: 500,
-  }
 
   const addLike = (event) => {
     event.preventDefault()
@@ -34,7 +30,7 @@ const Blog = ({ blog, updateLikes, updateComments, removeBlog, user }) => {
   if (!blog) return null
 
   return (
-    <div style={blogStyle}>
+    <div className="blogStyle">
       <h2>
         {blog.title} by {blog.author}
       </h2>{' '}
@@ -42,34 +38,48 @@ const Blog = ({ blog, updateLikes, updateComments, removeBlog, user }) => {
       Url: {blog.url}
       <br />
       Likes: {blog.likes}{' '}
-      <button className="likeButton" onClick={addLike}>
+      <Button variant="info" size="sm" className="likeButton" onClick={addLike}>
         like
-      </button>
+      </Button>
       <br />
       Added by: {blog.user.name}
       <br />
       {user.username === blog.user.username && (
-        <button className="removeButton" onClick={deleteBlog}>
+        <Button
+          variant="danger"
+          size="sm"
+          className="removeButton"
+          onClick={deleteBlog}
+        >
           delete
-        </button>
+        </Button>
       )}
       <div style={{ marginTop: 10 }}>
         <h3>Comments</h3>
-        <form onSubmit={addComment}>
-          <input
-            name="comment"
-            value={newComment}
-            data-testid="comment"
-            placeholder="comment"
-            onChange={(event) => setNewComment(event.target.value)}
-          />
-          <button type="submit">add comment</button>
-        </form>
-        <ul>
+        <Form onSubmit={addComment}>
+          <Form.Group>
+            <Form.Control
+              name="comment"
+              value={newComment}
+              data-testid="comment"
+              placeholder="comment"
+              onChange={(event) => setNewComment(event.target.value)}
+            />
+            <Button
+              className="likeButton"
+              variant="info"
+              size="sm"
+              type="submit"
+            >
+              add comment
+            </Button>
+          </Form.Group>
+        </Form>
+        <ListGroup style={{ marginTop: 30 }}>
           {blog.comments.map((comment) => (
-            <li key={cid(10000)}>{comment}</li>
+            <ListGroup.Item key={cid(10000)}>{comment}</ListGroup.Item>
           ))}
-        </ul>
+        </ListGroup>
       </div>
     </div>
   )

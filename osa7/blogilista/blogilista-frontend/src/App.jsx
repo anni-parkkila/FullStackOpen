@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Routes, Route, useMatch, Navigate, Link } from 'react-router-dom'
+import { Navbar, Nav, Button } from 'react-bootstrap'
 
 import Blog from './components/Blog'
 import BlogList from './components/BlogList'
@@ -93,8 +94,8 @@ const App = () => {
 
   if (loggedUser === null) {
     return (
-      <div>
-        <h1>Bloglist</h1>
+      <div className="container">
+        <h1 style={{ marginTop: 20, marginBottom: 30 }}>Blog App</h1>
         <h2>Log in to application</h2>
         <Notification />
         <LoginForm />
@@ -103,28 +104,55 @@ const App = () => {
   }
 
   return (
-    <div>
-      <div className="navBar">
-        <Link style={{ padding: 5 }} to="/">
-          Blogs
-        </Link>
-        <Link style={{ padding: 5, marginRight: 30 }} to="/users">
-          Users
-        </Link>
-        {loggedUser.name} logged in
-        <button style={{ marginLeft: 5 }} onClick={logoutButton}>
-          logout
-        </button>
-      </div>
+    <div className="container">
+      <h1 style={{ marginTop: 20 }}>Blog App</h1>
+      <Navbar
+        collapseOnSelect
+        expand="lg"
+        bg="light"
+        variant="light"
+        className="navBar"
+      >
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Nav className="mr-auto">
+            <Nav.Link href="#" as="span">
+              <Link style={{ padding: 5 }} to="/">
+                Blogs
+              </Link>
+            </Nav.Link>
+            <Nav.Link href="#" as="span">
+              <Link style={{ padding: 5, marginRight: 30 }} to="/users">
+                Users
+              </Link>
+            </Nav.Link>
+            <Nav.Link href="#" as="span">
+              {loggedUser ? (
+                <em>{loggedUser.name} logged in</em>
+              ) : (
+                <Link style={{ marginLeft: 5 }} to="/login">
+                  login
+                </Link>
+              )}
+            </Nav.Link>
+            <Button
+              variant="outline-secondary"
+              style={{ marginLeft: 5 }}
+              onClick={logoutButton}
+            >
+              logout
+            </Button>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
 
-      <h1>Blog App</h1>
       <Notification />
 
       <Routes>
         <Route
           path="/"
           element={
-            <div>
+            <div style={{ marginTop: 20 }}>
               <Togglable buttonLabel="Add a new blog" ref={blogFormRef}>
                 <BlogForm toggle={toggleVisibility} />
               </Togglable>
