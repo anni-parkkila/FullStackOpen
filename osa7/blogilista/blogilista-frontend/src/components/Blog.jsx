@@ -67,7 +67,7 @@ const Blog = ({ blog, updateLikes, updateComments, removeBlog, user }) => {
         </form>
         <ul>
           {blog.comments.map((comment) => (
-            <li key={cid(1000)}>{comment}</li>
+            <li key={cid(10000)}>{comment}</li>
           ))}
         </ul>
       </div>

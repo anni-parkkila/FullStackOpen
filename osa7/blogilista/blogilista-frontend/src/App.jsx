@@ -29,8 +29,6 @@ const App = () => {
   const users = useSelector((state) => state.users)
   const blogs = useSelector((state) => state.blogs)
 
-  console.log('app blogs', blogs)
-
   useEffect(() => {
     dispatch(initializeBlogs())
     dispatch(initializeUsers())
@@ -139,17 +137,17 @@ const App = () => {
         <Route
           path="/blogs/:id"
           element={
-            //blog ? (
-            <Blog
-              blog={blog}
-              updateLikes={addLike}
-              updateComments={addComment}
-              removeBlog={deleteBlog}
-              user={loggedUser}
-            />
-            //) : (
-            //<Navigate replace to="/" />
-            //)
+            blog ? (
+              <Blog
+                blog={blog}
+                updateLikes={addLike}
+                updateComments={addComment}
+                removeBlog={deleteBlog}
+                user={loggedUser}
+              />
+            ) : (
+              <Navigate replace to="/" />
+            )
           }
         />
       </Routes>
