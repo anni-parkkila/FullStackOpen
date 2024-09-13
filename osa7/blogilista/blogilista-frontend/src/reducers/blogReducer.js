@@ -49,6 +49,18 @@ export const likeBlog = (blog) => {
   }
 }
 
+export const commentBlog = (blog, newComment) => {
+  return async (dispatch) => {
+    const id = blog.id
+    const content = {
+      content: newComment,
+    }
+    await blogService.comment(id, content)
+    const updatedBlogs = await blogService.getAll()
+    dispatch(setBlogs(updatedBlogs.sort((a, b) => b.likes - a.likes)))
+  }
+}
+
 export const removeBlog = (blog) => {
   return async (dispatch) => {
     const id = blog.id
