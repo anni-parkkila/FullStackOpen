@@ -1,3 +1,4 @@
+import { ListGroup } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
@@ -5,15 +6,15 @@ const BlogList = () => {
   const blogs = useSelector((state) => state.blogs)
 
   return (
-    <div className="bloglist">
+    <ListGroup as="ol" numbered className="bloglist">
       {blogs.map((blog) => (
-        <div key={blog.id}>
+        <ListGroup.Item as="li" key={blog.id}>
           <Link to={`/blogs/${blog.id}`}>
             {blog.title} by {blog.author}
           </Link>
-        </div>
+        </ListGroup.Item>
       ))}
-    </div>
+    </ListGroup>
   )
 }
 

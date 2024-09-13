@@ -1,25 +1,3 @@
-.success {
-  color: rgb(50, 124, 96);
-  background: rgb(213, 242, 230);
-  font-size: 15px;
-  border-style: solid;
-  border-radius: 5px;
-  padding: 5px;
-  margin: 20px 0px;
-  max-width: 50%;
-}
-
-.error {
-  color: rgb(143, 46, 46);
-  background: rgb(242, 213, 213);
-  font-size: 15px;
-  border-style: solid;
-  border-radius: 5px;
-  padding: 5px;
-  margin: 20px 0px;
-  max-width: 50%;
-}
-
 .navBar {
   color: rgb(0, 0, 0);
   background: rgb(170, 170, 170);
@@ -29,53 +7,36 @@
   max-width: 70%;
 }
 
-.user {
-  color: rgb(143, 130, 46);
-  background: rgb(242, 236, 213);
-  font-size: 15px;
-  padding: 5px;
-  margin: 20px 0px;
-  max-width: 100%;
+.notification {
+  max-width: 70%;
+}
+
+.login {
+  max-width: 30%;
 }
 
 .bloglist,
 .userlist {
   margin-top: 30px;
+  max-width: 70%;
 }
 
-.likeButton {
-  background-color: rgb(117, 165, 210);
-  border-color: rgb(29, 87, 142);
-  color: white;
-  border-style: solid;
-  border-radius: 3px;
-  border-width: 3px;
+.blogStyle {
+  margin-top: 40;
+  margin-left: 5;
+  max-width: 70%;
 }
 
 .likeButton:hover {
-  background-color: rgb(29, 87, 142);
-  border-color: rgb(29, 87, 142);
+  background-color: rgb(54, 131, 148);
   color: white;
-  border-style: solid;
-  border-radius: 3px;
-  border-width: 3px;
 }
 
 .removeButton {
-  background-color: rgb(255, 216, 216);
-  border-color: darkred;
-  border-style: solid;
-  border-radius: 3px;
-  border-width: 3px;
   margin-top: 10px;
 }
 
 .removeButton:hover {
-  background-color: rgb(169, 83, 83);
-  border-color: rgb(169, 83, 83);
+  background-color: rgb(176, 71, 71);
   color: white;
-  border-style: solid;
-  border-radius: 3px;
-  border-width: 3px;
-  margin-top: 10px;
 }
