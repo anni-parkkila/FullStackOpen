@@ -10,7 +10,12 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import User from './components/User'
 import UserList from './components/UserList'
-import { initializeBlogs, likeBlog, removeBlog } from './reducers/blogReducer'
+import {
+  initializeBlogs,
+  likeBlog,
+  commentBlog,
+  removeBlog,
+} from './reducers/blogReducer'
 import { initializeUsers } from './reducers/userReducer'
 import { setLoggedUser } from './reducers/loginReducer'
 import { newNotification } from './reducers/notificationReducer'
@@ -23,6 +28,8 @@ const App = () => {
   const loggedUser = useSelector((state) => state.loggedUser)
   const users = useSelector((state) => state.users)
   const blogs = useSelector((state) => state.blogs)
+
+  console.log('app blogs', blogs)
 
   useEffect(() => {
     dispatch(initializeBlogs())
@@ -42,6 +49,16 @@ const App = () => {
     dispatch(likeBlog(blog))
     dispatch(
       newNotification(`You liked blog "${blog.title}" by ${blog.author}`, 5)
+    )
+  }
+
+  const addComment = (blog, newComment) => {
+    dispatch(commentBlog(blog, newComment))
+    dispatch(
+      newNotification(
+        `Comment added to blog "${blog.title}" by ${blog.author}`,
+        5
+      )
     )
   }
 
@@ -126,6 +143,7 @@ const App = () => {
             <Blog
               blog={blog}
               updateLikes={addLike}
+              updateComments={addComment}
               removeBlog={deleteBlog}
               user={loggedUser}
             />

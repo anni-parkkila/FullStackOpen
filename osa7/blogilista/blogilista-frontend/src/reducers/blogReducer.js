@@ -49,6 +49,28 @@ export const likeBlog = (blog) => {
   }
 }
 
+export const commentBlog = (blog, newComment) => {
+  console.log('redu blog', blog)
+  console.log('new', newComment)
+  return async (dispatch) => {
+    const id = blog.id
+    console.log('id', id)
+    //   const newBlog = {
+    //     ...blog,
+    //     likes: blog.likes + 1,
+    //   }
+    //   const changedBlog = await blogService.update(id, newBlog)
+    //   const updatedBlogs = await blogService.getAll()
+    //   dispatch(
+    //     setBlogs(
+    //       updatedBlogs
+    //         .map((blog) => (blog.id !== id ? blog : changedBlog))
+    //         .sort((a, b) => b.likes - a.likes)
+    //     )
+    //   )
+  }
+}
+
 export const removeBlog = (blog) => {
   return async (dispatch) => {
     const id = blog.id

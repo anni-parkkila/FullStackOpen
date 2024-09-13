@@ -1,4 +1,8 @@
-const Blog = ({ blog, updateLikes, removeBlog, user }) => {
+import { useState } from 'react'
+
+const Blog = ({ blog, updateLikes, updateComments, removeBlog, user }) => {
+  const [newComment, setNewComment] = useState('')
+
   const blogStyle = {
     marginLeft: 5,
     maxWidth: 500,
@@ -10,6 +14,12 @@ const Blog = ({ blog, updateLikes, removeBlog, user }) => {
       ...blog,
       user: blog.user.id,
     })
+  }
+
+  const addComment = (event) => {
+    event.preventDefault()
+    updateComments(blog, newComment)
+    setNewComment('')
   }
 
   const deleteBlog = (event) => {
@@ -45,6 +55,16 @@ const Blog = ({ blog, updateLikes, removeBlog, user }) => {
       )}
       <div style={{ marginTop: 10 }}>
         <h3>Comments</h3>
+        <form onSubmit={addComment}>
+          <input
+            name="comment"
+            value={newComment}
+            data-testid="comment"
+            placeholder="comment"
+            onChange={(event) => setNewComment(event.target.value)}
+          />
+          <button type="submit">add comment</button>
+        </form>
         <ul>
           {blog.comments.map((comment) => (
             <li key={cid(1000)}>{comment}</li>
