@@ -1,9 +1,9 @@
 const Books = (props) => {
-  if (!props.show) {
-    return null
+  if (!props) {
+    return null;
   }
 
-  const books = []
+  const books = [];
 
   return (
     <div>
@@ -26,7 +26,7 @@ const Books = (props) => {
         </tbody>
       </table>
     </div>
-  )
-}
+  );
+};
 
-export default Books
+export default Books;
