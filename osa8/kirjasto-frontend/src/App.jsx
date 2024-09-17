@@ -1,22 +1,22 @@
-import { Routes, Route, Link } from "react-router-dom";
-import { useQuery } from "@apollo/client";
-import { ALL_AUTHORS_AND_BOOKS } from "./queries";
+import { Routes, Route, Link } from 'react-router-dom'
+import { useQuery } from '@apollo/client'
+import { ALL_AUTHORS_AND_BOOKS } from './queries'
 
-import Authors from "./components/Authors";
-import Books from "./components/Books";
-import NewBook from "./components/NewBook";
+import Authors from './components/Authors'
+import Books from './components/Books'
+import NewBook from './components/NewBook'
 
 const App = () => {
   const padding = {
     padding: 5,
-  };
+  }
 
-  const result = useQuery(ALL_AUTHORS_AND_BOOKS);
+  const result = useQuery(ALL_AUTHORS_AND_BOOKS)
 
-  console.log("result", result.data);
+  console.log('result', result.data)
 
   if (result.loading) {
-    return <div>loading...</div>;
+    return <div>loading...</div>
   }
 
   return (
@@ -43,7 +43,7 @@ const App = () => {
         <Route path="/add" element={<NewBook />} />
       </Routes>
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App
