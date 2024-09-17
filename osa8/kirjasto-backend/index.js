@@ -22,44 +22,6 @@ mongoose
     console.log('error connection to MongoDB:', error.message)
   })
 
-// let books = [
-//   {
-//     title: 'Refactoring, edition 2',
-//     published: 2018,
-//     author: 'Martin Fowler',
-//     id: 'afa5de00-344d-11e9-a414-719c6709cf3e',
-//     genres: ['refactoring'],
-//   },
-//   {
-//     title: 'Refactoring to patterns',
-//     published: 2008,
-//     author: 'Joshua Kerievsky',
-//     id: 'afa5de01-344d-11e9-a414-719c6709cf3e',
-//     genres: ['refactoring', 'patterns'],
-//   },
-//   {
-//     title: 'Practical Object-Oriented Design, An Agile Primer Using Ruby',
-//     published: 2012,
-//     author: 'Sandi Metz',
-//     id: 'afa5de02-344d-11e9-a414-719c6709cf3e',
-//     genres: ['refactoring', 'design'],
-//   },
-//   {
-//     title: 'Crime and punishment',
-//     published: 1866,
-//     author: 'Fyodor Dostoevsky',
-//     id: 'afa5de03-344d-11e9-a414-719c6709cf3e',
-//     genres: ['classic', 'crime'],
-//   },
-//   {
-//     title: 'Demons',
-//     published: 1872,
-//     author: 'Fyodor Dostoevsky',
-//     id: 'afa5de04-344d-11e9-a414-719c6709cf3e',
-//     genres: ['classic', 'revolution'],
-//   },
-// ]
-
 const typeDefs = `
   type Author {
     name: String!
@@ -99,26 +61,20 @@ const typeDefs = `
 
 const resolvers = {
   Author: {
-    bookCount: (root) => {
-      return books.filter((b) => b.author === root.name).length
+    bookCount: async (root) => {
+      const books = await Book.find({ author: root.id })
+      return books.length
     },
   },
   Query: {
     authorCount: async () => Author.collection.countDocuments(),
     bookCount: async () => Book.collection.countDocuments(),
     allBooks: async (root, args) => {
-      return Book.find({})
-      // if (!args.author && !args.genre) {
-      //   return books
-      // } else if (args.author && !args.genre) {
-      //   return books.filter((b) => b.author === args.author)
-      // } else if (!args.author && args.genre) {
-      //   return books.filter((b) => b.genres.includes(args.genre))
-      // } else {
-      //   return books.filter(
-      //     (b) => b.author === args.author && b.genres.includes(args.genre)
-      //   )
-      // }
+      if (args.genre) {
+        return Book.find({ genres: { $all: [args.genre] } })
+      } else {
+        return Book.find({})
+      }
     },
     allAuthors: async (root, args) => {
       return Author.find({})
@@ -141,13 +97,6 @@ const resolvers = {
       const author = await Author.findOne({ name: args.name })
       author.born = args.setBornTo
       return author.save()
-      // const author = authors.find((a) => a.name === args.name)
-      // if (!author) {
-      //   return null
-      // }
-      // const updatedAuthor = { ...author, born: args.setBornTo }
-      // authors = authors.map((a) => (a.name === args.name ? updatedAuthor : a))
-      // return updatedAuthor
     },
   },
 }
