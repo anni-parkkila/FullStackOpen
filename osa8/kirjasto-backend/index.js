@@ -86,6 +86,12 @@ const resolvers = {
       return books.length
     },
   },
+  Book: {
+    author: async (root) => {
+      const author = await Author.findById(root.author)
+      return author
+    },
+  },
   Query: {
     me: (root, args, context) => {
       return context.currentUser

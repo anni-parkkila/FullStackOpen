@@ -1,6 +1,6 @@
 const Books = ({ books }) => {
   if (!books) {
-    return null;
+    return null
   }
 
   return (
@@ -17,14 +17,14 @@ const Books = ({ books }) => {
           {books.map((a) => (
             <tr key={a.title}>
               <td>{a.title}</td>
-              <td>{a.author}</td>
+              <td>{a.author.name}</td>
               <td>{a.published}</td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
-  );
-};
+  )
+}
 
-export default Books;
+export default Books
