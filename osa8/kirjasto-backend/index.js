@@ -1,5 +1,6 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
+const { GraphQLError } = require('graphql')
 const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
 const { v1: uuid } = require('uuid')
@@ -12,7 +13,6 @@ const PORT = process.env.PORT
 
 const MONGODB_URI = process.env.MONGODB_URI
 console.log('connecting to', MONGODB_URI)
-
 mongoose
   .connect(MONGODB_URI)
   .then(() => {
@@ -85,18 +85,50 @@ const resolvers = {
       const book = new Book({ ...args })
       const author = await Author.findOne({ name: args.author })
       if (!author) {
-        const newAuthor = new Author({ name: args.author, born: null })
-        await newAuthor.save()
-        book.author = newAuthor
+        try {
+          const newAuthor = new Author({ name: args.author, born: null })
+          await newAuthor.save()
+          book.author = newAuthor
+        } catch (error) {
+          throw new GraphQLError('Saving new author failed', {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              invalidArgs: args.author,
+              error,
+            },
+          })
+        }
       } else {
         book.author = author
       }
-      return book.save()
+      try {
+        await book.save()
+      } catch (error) {
+        throw new GraphQLError('Saving new book failed', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.title,
+            error,
+          },
+        })
+      }
+      return book
     },
     editAuthor: async (root, args) => {
       const author = await Author.findOne({ name: args.name })
-      author.born = args.setBornTo
-      return author.save()
+      try {
+        author.born = args.setBornTo
+        author.save()
+      } catch (error) {
+        throw new GraphQLError('Editing author failed', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: [author.name, author.born],
+            error,
+          },
+        })
+      }
+      return author
     },
   },
 }
