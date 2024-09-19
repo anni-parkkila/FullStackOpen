@@ -50,6 +50,7 @@ const typeDefs = `
   }
 
   type Query {
+    me: User
     authorCount: Int!
     bookCount: Int!
     allBooks(author: String, genre: String): [Book!]!
@@ -86,6 +87,9 @@ const resolvers = {
     },
   },
   Query: {
+    me: (root, args, context) => {
+      return context.currentUser
+    },
     authorCount: async () => Author.collection.countDocuments(),
     bookCount: async () => Book.collection.countDocuments(),
     allBooks: async (root, args) => {
@@ -101,7 +105,10 @@ const resolvers = {
   },
   Mutation: {
     createUser: async (root, args) => {
-      const user = new User({ username: args.username })
+      const user = new User({
+        username: args.username,
+        favoriteGenre: args.favoriteGenre,
+      })
 
       return user.save().catch((error) => {
         throw new GraphQLError('Creating the user failed', {
@@ -131,7 +138,12 @@ const resolvers = {
 
       return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
     },
-    addBook: async (root, args) => {
+    addBook: async (root, args, { currentUser }) => {
+      if (!currentUser) {
+        throw new GraphQLError('wrong credentials', {
+          extensions: { code: 'BAD_USER_INPUT' },
+        })
+      }
       const book = new Book({ ...args })
       const author = await Author.findOne({ name: args.author })
       if (!author) {
@@ -164,7 +176,12 @@ const resolvers = {
       }
       return book
     },
-    editAuthor: async (root, args) => {
+    editAuthor: async (root, args, { currentUser }) => {
+      if (!currentUser) {
+        throw new GraphQLError('wrong credentials', {
+          extensions: { code: 'BAD_USER_INPUT' },
+        })
+      }
       const author = await Author.findOne({ name: args.name })
       try {
         author.born = args.setBornTo
@@ -189,15 +206,12 @@ const server = new ApolloServer({
 })
 
 startStandaloneServer(server, {
-  listen: { port: process.env.PORT },
-
+  listen: { port: PORT },
   context: async ({ req, res }) => {
     const auth = req ? req.headers.authorization : null
     if (auth && auth.startsWith('Bearer ')) {
       const decodedToken = jwt.verify(auth.substring(7), process.env.JWT_SECRET)
-      const currentUser = await User.findById(decodedToken.id).populate(
-        'friends'
-      )
+      const currentUser = await User.findById(decodedToken.id)
       return { currentUser }
     }
   },
