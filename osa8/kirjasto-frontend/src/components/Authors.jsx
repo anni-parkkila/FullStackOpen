@@ -27,7 +27,7 @@ const Authors = ({ token, authors }) => {
   return (
     <div>
       <h2>Authors</h2>
-      <table>
+      <table width="300">
         <tbody>
           <tr>
             <th></th>
