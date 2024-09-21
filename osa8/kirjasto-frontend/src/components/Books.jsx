@@ -5,7 +5,6 @@ import { BOOKS_BY_GENRE } from '../queries'
 const Books = ({ books, genreFilter, setGenreFilter }) => {
   const [genres, setGenres] = useState([])
   const [booksToShow, setBooksToShow] = useState([])
-  console.log('genreFilter', genreFilter)
 
   useEffect(() => {
     setGenres([...new Set(books?.flatMap((book) => book.genres))])

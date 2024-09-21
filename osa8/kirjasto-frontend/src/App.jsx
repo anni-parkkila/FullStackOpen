@@ -33,10 +33,6 @@ const App = () => {
   const padding = {
     padding: 5,
   }
-  console.log('token', token)
-  console.log('user', user)
-  console.log('result authors', resultAuthors.data)
-  console.log('result books', resultBooks.data)
 
   if (resultAuthors.loading || resultBooks.loading) {
     return <div>loading...</div>
