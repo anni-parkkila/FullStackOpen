@@ -2,43 +2,43 @@ import { useEffect, useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { BOOKS_BY_GENRE } from '../queries'
 
-const Books = ({ books }) => {
+const Books = ({ books, genreFilter, setGenreFilter }) => {
   const [genres, setGenres] = useState([])
-  const [genre, setGenre] = useState('')
   const [booksToShow, setBooksToShow] = useState([])
+  console.log('genreFilter', genreFilter)
 
   useEffect(() => {
     setGenres([...new Set(books?.flatMap((book) => book.genres))])
   }, [books])
 
   const result = useQuery(BOOKS_BY_GENRE, {
-    variables: { genre },
-    skip: !genre,
+    variables: { genre: genreFilter },
+    skip: !genreFilter,
   })
 
   useEffect(() => {
-    if (genre && result.data) {
+    if (genreFilter && result.data) {
       setBooksToShow(result.data.allBooks)
     } else {
       setBooksToShow(books)
     }
-  }, [genre, result.data, books])
+  }, [genreFilter, result.data, books])
 
   return (
     <div>
       <h2>Books</h2>
       <div>
         {genres.map((g) => (
-          <button key={g} type="button" onClick={() => setGenre(g)}>
+          <button key={g} type="button" onClick={() => setGenreFilter(g)}>
             {g}
           </button>
         ))}
-        <button key="all" type="button" onClick={() => setGenre('')}>
+        <button key="all" type="button" onClick={() => setGenreFilter('')}>
           all genres
         </button>
       </div>
       <div style={{ marginTop: 30 }}>
-        Books in genre: <strong>{genre}</strong>
+        Books in genre: <strong>{genreFilter}</strong>
       </div>
       <table style={{ maxWidth: 800 }}>
         <tbody>

@@ -14,6 +14,7 @@ const App = () => {
   const [token, setToken] = useState(null)
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
+  const [genreFilter, setGenreFilter] = useState('')
   const client = useApolloClient()
   const userResult = useQuery(ME)
   const resultAuthors = useQuery(ALL_AUTHORS)
@@ -77,7 +78,13 @@ const App = () => {
           />
           <Route
             path="/books"
-            element={<Books books={resultBooks.data.allBooks} />}
+            element={
+              <Books
+                books={resultBooks.data.allBooks}
+                genreFilter={genreFilter}
+                setGenreFilter={setGenreFilter}
+              />
+            }
           />
           <Route
             path="/login"
@@ -118,11 +125,23 @@ const App = () => {
         />
         <Route
           path="/books"
-          element={<Books books={resultBooks.data.allBooks} />}
+          element={
+            <Books
+              books={resultBooks.data.allBooks}
+              genreFilter={genreFilter}
+              setGenreFilter={setGenreFilter}
+            />
+          }
         />
         <Route
           path="/add"
-          element={<NewBook token={token} setError={notify} />}
+          element={
+            <NewBook
+              token={token}
+              setError={notify}
+              genreFilter={genreFilter}
+            />
+          }
         />
         <Route
           path="/recommended"
@@ -130,6 +149,7 @@ const App = () => {
             <Recommended
               books={resultBooks.data.allBooks}
               genre={user.me.favoriteGenre}
+              setGenreFilter={setGenreFilter}
             />
           }
         />
