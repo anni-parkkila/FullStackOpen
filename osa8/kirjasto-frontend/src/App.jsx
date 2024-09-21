@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Routes, Route, Link } from 'react-router-dom'
-import { useQuery, useApolloClient } from '@apollo/client'
-import { ALL_AUTHORS, ALL_BOOKS, ME } from './queries'
+import { useQuery, useApolloClient, useSubscription } from '@apollo/client'
+import { ALL_AUTHORS, ALL_BOOKS, BOOK_ADDED, ME } from './queries'
 
 import Authors from './components/Authors'
 import Books from './components/Books'
@@ -30,9 +30,14 @@ const App = () => {
     }
   }, [token])
 
-  const padding = {
-    padding: 5,
-  }
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      console.log(data)
+      window.alert(
+        `New book added or fetched from server: "${data.data.bookAdded.title}" by ${data.data.bookAdded.author.name}`
+      )
+    },
+  })
 
   if (resultAuthors.loading || resultBooks.loading) {
     return <div>loading...</div>
@@ -49,6 +54,10 @@ const App = () => {
     setToken(null)
     localStorage.clear()
     client.resetStore()
+  }
+
+  const padding = {
+    padding: 5,
   }
 
   if (!token || !user) {
