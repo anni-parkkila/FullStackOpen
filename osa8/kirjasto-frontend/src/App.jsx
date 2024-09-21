@@ -121,7 +121,12 @@ const App = () => {
         />
         <Route
           path="/recommended"
-          element={<Recommended genre={user.me.favoriteGenre} />}
+          element={
+            <Recommended
+              books={result.data.allBooks}
+              genre={user.me.favoriteGenre}
+            />
+          }
         />
       </Routes>
     </div>

@@ -1,22 +1,25 @@
+import { useEffect, useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { ALL_BOOKS } from '../queries'
 
-const Recommended = ({ genre }) => {
-  let booksToShow = []
+const Recommended = ({ books, genre }) => {
+  const [booksToShow, setBooksToShow] = useState([])
 
   const result = useQuery(ALL_BOOKS, {
     variables: { genre },
     skip: !genre,
   })
 
-  if (genre && result.data) {
-    booksToShow = result.data.allBooks
-  }
+  useEffect(() => {
+    if (result.data) {
+      setBooksToShow(result.data.allBooks)
+    }
+  }, [books, result.data])
 
   return (
     <div>
       <h2>Recommendations</h2>
-      Books in your favorite genre
+      Books in your favorite genre: <strong>{genre}</strong>
       <table style={{ maxWidth: 800 }}>
         <tbody>
           <tr>

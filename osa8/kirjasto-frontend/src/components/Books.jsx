@@ -35,6 +35,9 @@ const Books = ({ books }) => {
           all genres
         </button>
       </div>
+      <div style={{ marginTop: 30 }}>
+        Books in genre: <strong>{genre}</strong>
+      </div>
       <table style={{ maxWidth: 800 }}>
         <tbody>
           <tr>
