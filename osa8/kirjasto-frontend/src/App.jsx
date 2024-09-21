@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Routes, Route, Link } from 'react-router-dom'
 import { useQuery, useApolloClient } from '@apollo/client'
-import { ALL_AUTHORS_AND_BOOKS, ME } from './queries'
+import { ALL_AUTHORS, ALL_BOOKS, ME } from './queries'
 
 import Authors from './components/Authors'
 import Books from './components/Books'
@@ -16,6 +16,8 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const client = useApolloClient()
   const userResult = useQuery(ME)
+  const resultAuthors = useQuery(ALL_AUTHORS)
+  const resultBooks = useQuery(ALL_BOOKS)
 
   useEffect(() => {
     if (token) {
@@ -32,12 +34,10 @@ const App = () => {
   }
   console.log('token', token)
   console.log('user', user)
+  console.log('result authors', resultAuthors.data)
+  console.log('result books', resultBooks.data)
 
-  const result = useQuery(ALL_AUTHORS_AND_BOOKS)
-
-  console.log('result', result.data)
-
-  if (result.loading) {
+  if (resultAuthors.loading || resultBooks.loading) {
     return <div>loading...</div>
   }
 
@@ -73,11 +73,11 @@ const App = () => {
         <Routes>
           <Route
             path="/"
-            element={<Authors authors={result.data.allAuthors} />}
+            element={<Authors authors={resultAuthors.data.allAuthors} />}
           />
           <Route
             path="/books"
-            element={<Books books={result.data.allBooks} />}
+            element={<Books books={resultBooks.data.allBooks} />}
           />
           <Route
             path="/login"
@@ -112,9 +112,14 @@ const App = () => {
       <Routes>
         <Route
           path="/"
-          element={<Authors token={token} authors={result.data.allAuthors} />}
+          element={
+            <Authors token={token} authors={resultAuthors.data.allAuthors} />
+          }
         />
-        <Route path="/books" element={<Books books={result.data.allBooks} />} />
+        <Route
+          path="/books"
+          element={<Books books={resultBooks.data.allBooks} />}
+        />
         <Route
           path="/add"
           element={<NewBook token={token} setError={notify} />}
@@ -123,7 +128,7 @@ const App = () => {
           path="/recommended"
           element={
             <Recommended
-              books={result.data.allBooks}
+              books={resultBooks.data.allBooks}
               genre={user.me.favoriteGenre}
             />
           }
