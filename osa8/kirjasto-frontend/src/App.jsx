@@ -5,7 +5,7 @@ import {
   ALL_AUTHORS,
   ALL_BOOKS,
   BOOK_ADDED,
-  //BOOKS_BY_GENRE,
+  BOOKS_BY_GENRE,
   ME,
 } from './queries'
 
@@ -17,19 +17,17 @@ import Notification from './components/Notification'
 import Recommended from './components/Redommended'
 
 // function that takes care of manipulating cache
-const updateCache = (cache, query, addedBook) => {
+export const updateCache = (cache, query, addedBook) => {
   // helper that is used to eliminate saving same person twice
   const uniqByTitle = (a) => {
     let seen = new Set()
     return a.filter((item) => {
       let k = item.title
-      console.log('k', k)
       return seen.has(k) ? false : seen.add(k)
     })
   }
 
   cache.updateQuery(query, ({ allBooks }) => {
-    console.log('allBooks', uniqByTitle(allBooks.concat(addedBook)))
     return {
       allBooks: uniqByTitle(allBooks.concat(addedBook)),
     }
@@ -57,19 +55,19 @@ const App = () => {
   }, [token])
 
   useSubscription(BOOK_ADDED, {
-    onData: ({ data }) => {
-      console.log('data', data)
+    onData: ({ data, client }) => {
       const addedBook = data.data.bookAdded
       notify(
         `New book added or fetched from server: "${addedBook.title}" by ${addedBook.author.name}`
       )
       updateCache(client.cache, { query: ALL_BOOKS }, addedBook)
-      console.log('client cache', client.cache)
-      // updateCache(
-      //   client.cache,
-      //   { query: BOOKS_BY_GENRE, variables: { genre: genreFilter } },
-      //   addedBook
-      // )
+      addedBook.genres.map((g) => {
+        updateCache(
+          client.cache,
+          { query: BOOKS_BY_GENRE, variables: { genre: g } },
+          addedBook
+        )
+      })
     },
   })
 
@@ -175,13 +173,7 @@ const App = () => {
         />
         <Route
           path="/add"
-          element={
-            <NewBook
-              token={token}
-              setError={notify}
-              genreFilter={genreFilter}
-            />
-          }
+          element={<NewBook token={token} setError={notify} />}
         />
         <Route
           path="/recommended"
