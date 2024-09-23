@@ -1,8 +1,11 @@
-const Notification = ({ errorMessage }) => {
-  if (!errorMessage) {
+const Notification = ({ message }) => {
+  if (!message) {
     return null
+  } else if (message.includes('wrong credentials')) {
+    return <div style={{ color: 'red' }}>{message}</div>
+  } else {
+    return <div style={{ color: 'green' }}>{message}</div>
   }
-  return <div style={{ color: 'red' }}>{errorMessage}</div>
 }
 
 export default Notification

@@ -1,7 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Routes, Route, Link } from 'react-router-dom'
 import { useQuery, useApolloClient, useSubscription } from '@apollo/client'
-import { ALL_AUTHORS, ALL_BOOKS, BOOK_ADDED, ME } from './queries'
+import {
+  ALL_AUTHORS,
+  ALL_BOOKS,
+  BOOK_ADDED,
+  //BOOKS_BY_GENRE,
+  ME,
+} from './queries'
 
 import Authors from './components/Authors'
 import Books from './components/Books'
@@ -10,10 +16,30 @@ import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import Recommended from './components/Redommended'
 
+// function that takes care of manipulating cache
+const updateCache = (cache, query, addedBook) => {
+  // helper that is used to eliminate saving same person twice
+  const uniqByTitle = (a) => {
+    let seen = new Set()
+    return a.filter((item) => {
+      let k = item.title
+      console.log('k', k)
+      return seen.has(k) ? false : seen.add(k)
+    })
+  }
+
+  cache.updateQuery(query, ({ allBooks }) => {
+    console.log('allBooks', uniqByTitle(allBooks.concat(addedBook)))
+    return {
+      allBooks: uniqByTitle(allBooks.concat(addedBook)),
+    }
+  })
+}
+
 const App = () => {
   const [token, setToken] = useState(null)
   const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [message, setMessage] = useState(null)
   const [genreFilter, setGenreFilter] = useState('')
   const client = useApolloClient()
   const userResult = useQuery(ME)
@@ -32,10 +58,18 @@ const App = () => {
 
   useSubscription(BOOK_ADDED, {
     onData: ({ data }) => {
-      console.log(data)
-      window.alert(
-        `New book added or fetched from server: "${data.data.bookAdded.title}" by ${data.data.bookAdded.author.name}`
+      console.log('data', data)
+      const addedBook = data.data.bookAdded
+      notify(
+        `New book added or fetched from server: "${addedBook.title}" by ${addedBook.author.name}`
       )
+      updateCache(client.cache, { query: ALL_BOOKS }, addedBook)
+      console.log('client cache', client.cache)
+      // updateCache(
+      //   client.cache,
+      //   { query: BOOKS_BY_GENRE, variables: { genre: genreFilter } },
+      //   addedBook
+      // )
     },
   })
 
@@ -44,9 +78,9 @@ const App = () => {
   }
 
   const notify = (message) => {
-    setErrorMessage(message)
+    setMessage(message)
     setTimeout(() => {
-      setErrorMessage(null)
+      setMessage(null)
     }, 5000)
   }
 
@@ -75,7 +109,7 @@ const App = () => {
             Login
           </Link>
         </div>
-        <Notification errorMessage={errorMessage} />
+        <Notification message={message} />
         <Routes>
           <Route
             path="/"
@@ -103,6 +137,7 @@ const App = () => {
   return (
     <div>
       <h1>Library</h1>
+      <Notification message={message} />
       <div>
         <Link style={padding} to="/">
           Authors
