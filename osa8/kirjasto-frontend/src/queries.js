@@ -17,8 +17,6 @@ const BOOK_DETAILS = gql`
     published
     author {
       name
-      born
-      bookCount
       id
     }
     genres

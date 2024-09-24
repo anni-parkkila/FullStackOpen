@@ -7,12 +7,6 @@ const Book = require('./models/book')
 const User = require('./models/user')
 
 const resolvers = {
-  Author: {
-    bookCount: async (root) => {
-      const books = await Book.find({ author: root.id })
-      return books.length
-    },
-  },
   Book: {
     author: async (root) => {
       const author = await Author.findById(root.author)
@@ -33,7 +27,8 @@ const resolvers = {
       }
     },
     allAuthors: async (root, args) => {
-      return Author.find({})
+      const authors = await Author.find({}).populate('bookCount')
+      return authors
     },
   },
   Mutation: {
