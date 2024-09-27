@@ -44,6 +44,16 @@ const ratingDescription = (rating: number): string => {
 };
 
 const calculateExercises = (hours: number[], target: number): ExerciseHours => {
+  hours.map((h) => {
+    if (isNaN(Number(h))) {
+      throw new Error("Provided values were not numbers!");
+    }
+  });
+
+  if (isNaN(Number(target))) {
+    throw new Error("Provided values were not numbers!");
+  }
+
   const avg = averageHours(hours);
   const days = hours.filter((h) => h > 0).length;
 
