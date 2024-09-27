@@ -1,5 +1,3 @@
-import { parseArguments } from "./utils";
-
 interface ExerciseHours {
   periodLength: number;
   trainingDays: number;
@@ -27,6 +25,8 @@ const rating = (average: number, target: number): number => {
       return 2;
     case sub < -0.5:
       return 1;
+    default:
+      throw new Error("Something went wrong");
   }
 };
 
@@ -38,6 +38,8 @@ const ratingDescription = (rating: number): string => {
       return "Not too bad but could be better";
     case 1:
       return "Average well below target";
+    default:
+      throw new Error("Something went wrong");
   }
 };
 
@@ -57,13 +59,32 @@ const calculateExercises = (hours: number[], target: number): ExerciseHours => {
   return calculations;
 };
 
-try {
-  const { targetValue, reportedHours } = parseArguments(process.argv);
-  console.log(calculateExercises(reportedHours, targetValue));
-} catch (error: unknown) {
-  let errorMessage = "Something bad happened.";
-  if (error instanceof Error) {
-    errorMessage += " Error: " + error.message;
+const parseArguments = (args: string[]) => {
+  if (args.length < 4) throw new Error("Not enough arguments");
+
+  args.slice(2).map((a) => {
+    if (isNaN(Number(a))) {
+      throw new Error("Provided values were not numbers!");
+    }
+  });
+
+  return {
+    targetValue: Number(process.argv[2]),
+    reportedHours: process.argv.slice(3).map((a) => Number(a)),
+  };
+};
+
+if (require.main === module) {
+  try {
+    const { targetValue, reportedHours } = parseArguments(process.argv);
+    console.log(calculateExercises(reportedHours, targetValue));
+  } catch (error: unknown) {
+    let errorMessage = "Something bad happened.";
+    if (error instanceof Error) {
+      errorMessage += " Error: " + error.message;
+    }
+    console.log(errorMessage);
   }
-  console.log(errorMessage);
 }
+
+export default calculateExercises;

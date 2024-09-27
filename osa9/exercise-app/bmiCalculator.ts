@@ -1,7 +1,5 @@
-import { parseArguments } from "./utils";
-
 const calculateBmi = (height: number, weight: number): string => {
-  const bmi: number = weight / (height * 0.01) ** 2;
+  const bmi: number = Number((weight / (height * 0.01) ** 2).toFixed(1));
   switch (true) {
     case bmi < 16.0:
       return "Underweight (Severe thinness)";
@@ -24,13 +22,33 @@ const calculateBmi = (height: number, weight: number): string => {
   }
 };
 
-try {
-  const { height, weight } = parseArguments(process.argv);
-  console.log(calculateBmi(height, weight));
-} catch (error: unknown) {
-  let errorMessage = "Something bad happened.";
-  if (error instanceof Error) {
-    errorMessage += " Error: " + error.message;
+const parseArguments = (args: string[]) => {
+  if (args.length < 4) throw new Error("Not enough arguments");
+  if (args.length > 4) throw new Error("Too many arguments");
+
+  args.slice(2).map((a) => {
+    if (isNaN(Number(a))) {
+      throw new Error("Provided values were not numbers!");
+    }
+  });
+
+  return {
+    height: Number(args[2]),
+    weight: Number(args[3]),
+  };
+};
+
+if (require.main === module) {
+  try {
+    const { height, weight } = parseArguments(process.argv);
+    console.log(calculateBmi(height, weight));
+  } catch (error: unknown) {
+    let errorMessage = "Something bad happened.";
+    if (error instanceof Error) {
+      errorMessage += " Error: " + error.message;
+    }
+    console.log(errorMessage);
   }
-  console.log(errorMessage);
 }
+
+export default calculateBmi;

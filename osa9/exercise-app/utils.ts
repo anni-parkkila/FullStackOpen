@@ -7,21 +7,24 @@ export const parseArguments = (args: string[]) => {
     }
   });
 
-  const calculator: string = args[1].split("/").at(-1);
+  const calculator: string | undefined = args[1].split("/").at(-1);
+  console.log("calculator", calculator);
   if (calculator === "bmiCalculator.ts") {
+    console.log("iffffffi");
     if (args.length > 4) {
       throw new Error("Too many arguments");
     }
-    return {
-      height: Number(args[2]),
-      weight: Number(args[3]),
-    };
-  } else if (calculator === "exerciseCalculator.ts") {
-    return {
-      targetValue: Number(process.argv[2]),
-      reportedHours: process.argv.slice(3).map((a) => Number(a)),
-    };
   }
+  return {
+    height: Number(args[2]),
+    weight: Number(args[3]),
+  };
+  // } else {
+  //   return {
+  //     targetValue: Number(process.argv[2]),
+  //     reportedHours: process.argv.slice(3).map((a) => Number(a)),
+  //   };
+  // }
 };
 
 const isNotNumber = (argument: any): boolean => {
