@@ -42,6 +42,10 @@ router.post(
   }
 );
 
+router.get("/:id", (req, res: Response<Patient>) => {
+  res.send(patientService.getPatientInfo(req.params.id));
+});
+
 router.use(errorMiddleware);
 
 export default router;
