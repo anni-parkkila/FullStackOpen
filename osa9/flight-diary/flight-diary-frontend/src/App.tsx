@@ -59,22 +59,69 @@ const App = () => {
       <form onSubmit={diaryEntryCreation}>
         date:{" "}
         <input
+          type="date"
           value={newDate}
           onChange={(event) => setNewDate(event.target.value)}
         />
         <br />
-        visibility:{" "}
-        <input
-          value={newVisibility}
-          onChange={(event) => setNewVisibility(event.target.value)}
-        />
-        <br />
-        weather:{" "}
-        <input
-          value={newWeather}
-          onChange={(event) => setNewWeather(event.target.value)}
-        />
-        <br />
+        <div>
+          visibility: great
+          <input
+            type="radio"
+            name="visibility"
+            onChange={() => setNewVisibility("great")}
+          />{" "}
+          good
+          <input
+            type="radio"
+            name="visibility"
+            onChange={() => setNewVisibility("good")}
+          />{" "}
+          ok
+          <input
+            type="radio"
+            name="visibility"
+            onChange={() => setNewVisibility("ok")}
+          />{" "}
+          poor
+          <input
+            type="radio"
+            name="visibility"
+            onChange={() => setNewVisibility("poor")}
+          />
+        </div>
+        <div>
+          weather: sunny
+          <input
+            type="radio"
+            name="weather"
+            onChange={() => setNewWeather("sunny")}
+          />{" "}
+          rainy
+          <input
+            type="radio"
+            name="weather"
+            onChange={() => setNewWeather("rainy")}
+          />{" "}
+          cloudy
+          <input
+            type="radio"
+            name="weather"
+            onChange={() => setNewWeather("cloudy")}
+          />{" "}
+          stormy
+          <input
+            type="radio"
+            name="weather"
+            onChange={() => setNewWeather("stormy")}
+          />{" "}
+          windy
+          <input
+            type="radio"
+            name="weather"
+            onChange={() => setNewVisibility("windy")}
+          />
+        </div>
         comment:{" "}
         <input
           value={newComment}
