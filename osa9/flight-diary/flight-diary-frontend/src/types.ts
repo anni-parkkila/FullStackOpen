@@ -7,3 +7,8 @@ export interface DiaryEntry {
 }
 
 export type NewDiaryEntry = Omit<DiaryEntry, "id">;
+
+export interface ValidationError {
+  message: string;
+  errors: Record<string, string[]>;
+}
