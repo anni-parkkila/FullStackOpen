@@ -21,16 +21,11 @@ const App = () => {
     const fetchPatientList = async () => {
       const patients = await patientService.getAll();
       setPatients(patients);
-      const one = await patientService.getById(
-        "d2773336-f723-11e9-8f0b-362b9e155667"
-      );
-      console.log("one", one);
     };
     void fetchPatientList();
   }, []);
 
   useEffect(() => {
-    console.log("match", match);
     if (match && match.params.id) {
       const findPatientInfo = async () => {
         const patient = await patientService.getById(match.params.id);
