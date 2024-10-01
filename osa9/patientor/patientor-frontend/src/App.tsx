@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Route, Link, Routes, useMatch } from "react-router-dom";
 import { Button, Divider, Container, Typography } from "@mui/material";
+import "./App.css";
 
 import { apiBaseUrl } from "./constants";
 import { Diagnosis, Patient } from "./types";
