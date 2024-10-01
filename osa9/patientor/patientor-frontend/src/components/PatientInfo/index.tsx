@@ -1,11 +1,25 @@
-import { Patient } from "../../types";
+import { Diagnosis, Patient } from "../../types";
 
-interface Props {
+interface PatientProps {
   patient: Patient | undefined;
+  diagnoses: Diagnosis[];
 }
 
-const PatientInfoPage = ({ patient }: Props) => {
-  console.log("patient info", patient);
+interface DiagnosisProps {
+  code: string;
+  diagnoses: Diagnosis[];
+}
+
+const DiagnosisItem = ({ code, diagnoses }: DiagnosisProps) => {
+  const diagnosis = diagnoses.find((d) => d.code === code);
+  return (
+    <li>
+      {diagnosis?.code} {diagnosis?.name}
+    </li>
+  );
+};
+
+const PatientInfoPage = ({ patient, diagnoses }: PatientProps) => {
   if (!patient) return <div>Patient not found!</div>;
   return (
     <div>
@@ -24,7 +38,13 @@ const PatientInfoPage = ({ patient }: Props) => {
                 <strong>{entry.date}:</strong> <em>{entry.description}</em>
                 <ul>
                   {entry.diagnosisCodes?.map((code) => {
-                    return <li key={code}>{code}</li>;
+                    return (
+                      <DiagnosisItem
+                        key={code}
+                        code={code}
+                        diagnoses={diagnoses}
+                      />
+                    );
                   })}
                 </ul>
               </div>
