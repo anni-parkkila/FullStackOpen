@@ -1,11 +1,17 @@
 import { z } from "zod";
-import { NewPatientSchema } from "./utils";
+import {
+  NewEntrySchema,
+  // NewHealthCheckEntry,
+  // NewHospitalEntry,
+  // NewOccupationalHealthcareEntry,
+  NewPatientSchema,
+} from "./utils";
 
-export enum EntryType {
-  Hospital = "Hospital",
-  Occupational = "OccupationalHealthcare",
-  Health = "HealthCheck",
-}
+// export enum EntryType {
+//   Hospital = "Hospital",
+//   Occupational = "OccupationalHealthcare",
+//   Health = "HealthCheck",
+// }
 
 export interface Diagnosis {
   code: string;
@@ -78,3 +84,5 @@ export interface Patient {
 export type NonSensitivePatientData = Omit<Patient, "ssn" | "entries">;
 
 export type NewPatient = z.infer<typeof NewPatientSchema>;
+
+export type NewEntry = z.infer<typeof NewEntrySchema>;

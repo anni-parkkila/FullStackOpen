@@ -46,6 +46,18 @@ router.get("/:id", (req, res: Response<Patient>) => {
   res.send(patientService.getPatientInfo(req.params.id));
 });
 
+router.post("/:id/entries", (req, res) => {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    const newEntry = patientService.addNewEntry(req.params.id, req.body);
+    res.json(newEntry);
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(400).send(error.message);
+    }
+  }
+});
+
 router.use(errorMiddleware);
 
 export default router;
