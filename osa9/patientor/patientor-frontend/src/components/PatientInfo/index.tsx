@@ -1,10 +1,17 @@
-import { Diagnosis, Patient } from "../../types";
+import axios from "axios";
+import { Button } from "@mui/material";
+
+import { Diagnosis, EntryFormValues, Patient } from "../../types";
 import EntryDetails from "./EntryDetails";
 
-import Icon from "@mui/material/Icon";
+import AddEntryModal from "../AddEntryModal";
+
+import patientService from "../../services/patients";
+
 import MaleIcon from "@mui/icons-material/Male";
 import FemaleIcon from "@mui/icons-material/Female";
 import TransgenderIcon from "@mui/icons-material/Transgender";
+import { useState } from "react";
 
 const genderIcon = (gender: string) => {
   switch (gender) {
@@ -37,7 +44,43 @@ const DiagnosisItem = ({ code, diagnoses }: DiagnosisProps) => {
 };
 
 const PatientInfoPage = ({ patient, diagnoses }: PatientProps) => {
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [error, setError] = useState<string>();
+  const [entries, setEntries] = useState([]);
+
   if (!patient) return <div>Patient not found!</div>;
+
+  const openModal = (): void => setModalOpen(true);
+
+  const closeModal = (): void => {
+    setModalOpen(false);
+    setError(undefined);
+  };
+
+  const submitNewEntry = async (values: EntryFormValues) => {
+    try {
+      const entry = await patientService.addEntry(patient.id, values);
+      setEntries(entries.concat(entry));
+      setModalOpen(false);
+    } catch (e: unknown) {
+      if (axios.isAxiosError(e)) {
+        if (e?.response?.data && typeof e?.response?.data === "string") {
+          const message = e.response.data.replace(
+            "Something went wrong. Error: ",
+            ""
+          );
+          console.error(message);
+          setError(message);
+        } else {
+          setError("Unrecognized axios error");
+        }
+      } else {
+        console.error("Unknown error", e);
+        setError("Unknown error");
+      }
+    }
+  };
+
   const icon = genderIcon(patient.gender);
   return (
     <div>
@@ -51,6 +94,19 @@ const PatientInfoPage = ({ patient, diagnoses }: PatientProps) => {
       </div>
       <div>
         <h3>Entries</h3>
+        <AddEntryModal
+          modalOpen={modalOpen}
+          onSubmit={submitNewEntry}
+          error={error}
+          onClose={closeModal}
+        />
+        <Button
+          style={{ marginBottom: 10 }}
+          variant="contained"
+          onClick={() => openModal()}
+        >
+          Add New Entry
+        </Button>
         {patient.entries && patient.entries.length > 0 ? (
           patient.entries.map((entry) => {
             return (
