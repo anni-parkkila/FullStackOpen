@@ -74,6 +74,7 @@ export const toNewEntry = (object: unknown): NewEntry => {
     "specialist" in object
   ) {
     const newEntry = {
+      ...object,
       type: parseEntryType(object.type),
       description: parseDescription(object.description),
       date: parseDate(object.date),
@@ -81,7 +82,6 @@ export const toNewEntry = (object: unknown): NewEntry => {
       diagnosisCodes:
         "diagnosisCodes" in object ? parseDiagnosisCodes(object) : undefined,
     } as NewEntry;
-
     switch (object.type) {
       case "Hospital":
         if (

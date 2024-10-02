@@ -12,6 +12,7 @@ import {
 
 import { EntryFormValues, EntryType } from "../../types";
 import HealthCheckForm from "./HealthCheckForm";
+import HospitalForm from "./HospitalForm";
 
 interface Props {
   onCancel: () => void;
@@ -39,6 +40,8 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
   const [specialist, setSpecialist] = useState("");
   const [diagnosisCodes, setDiagnosisCodes] = useState("");
   const [healthCheckRating, setHealthCheckRating] = useState<number>(0);
+  const [criteria, setCriteria] = useState("");
+  const [dischargeDate, setDischargeDate] = useState("");
 
   const onEntryTypeChange = (event: SelectChangeEvent<string>) => {
     event.preventDefault();
@@ -61,6 +64,15 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
             setHealthCheckRating={setHealthCheckRating}
           />
         );
+      case "Hospital":
+        return (
+          <HospitalForm
+            criteria={criteria}
+            setCriteria={setCriteria}
+            dischargeDate={dischargeDate}
+            setDischargeDate={setDischargeDate}
+          />
+        );
     }
   };
 
@@ -81,10 +93,21 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
     switch (type) {
       case "HealthCheck":
         onSubmit({
-          type,
           ...baseEntry,
+          type,
           healthCheckRating,
         });
+        break;
+      case "Hospital":
+        onSubmit({
+          ...baseEntry,
+          type,
+          discharge: {
+            date: dischargeDate,
+            criteria,
+          },
+        });
+        break;
     }
   };
 
