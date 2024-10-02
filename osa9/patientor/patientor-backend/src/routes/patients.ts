@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 import { z } from "zod";
 import patientService from "../services/patientService";
 import { NewPatient, Patient } from "../types";
-import { NewPatientSchema } from "../utils";
+import { NewPatientSchema, toNewEntry } from "../utils";
 
 const router = express.Router();
 
@@ -48,9 +48,9 @@ router.get("/:id", (req, res: Response<Patient>) => {
 
 router.post("/:id/entries", (req, res) => {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const newEntry = patientService.addNewEntry(req.params.id, req.body);
-    res.json(newEntry);
+    const newEntry = toNewEntry(req.body);
+    const addedEntry = patientService.addNewEntry(req.params.id, newEntry);
+    res.json(addedEntry);
   } catch (error) {
     if (error instanceof Error) {
       res.status(400).send(error.message);

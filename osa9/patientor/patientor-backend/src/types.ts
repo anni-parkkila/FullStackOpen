@@ -1,17 +1,11 @@
 import { z } from "zod";
-import {
-  NewEntrySchema,
-  // NewHealthCheckEntry,
-  // NewHospitalEntry,
-  // NewOccupationalHealthcareEntry,
-  NewPatientSchema,
-} from "./utils";
+import { NewPatientSchema } from "./utils";
 
-// export enum EntryType {
-//   Hospital = "Hospital",
-//   Occupational = "OccupationalHealthcare",
-//   Health = "HealthCheck",
-// }
+export enum EntryType {
+  Hospital = "Hospital",
+  Occupational = "OccupationalHealthcare",
+  Health = "HealthCheck",
+}
 
 export interface Diagnosis {
   code: string;
@@ -85,4 +79,9 @@ export type NonSensitivePatientData = Omit<Patient, "ssn" | "entries">;
 
 export type NewPatient = z.infer<typeof NewPatientSchema>;
 
-export type NewEntry = z.infer<typeof NewEntrySchema>;
+// Define special omit for unions
+type UnionOmit<T, K extends string | number | symbol> = T extends unknown
+  ? Omit<T, K>
+  : never;
+// Define Entry without the 'id' property
+export type NewEntry = UnionOmit<Entry, "id">;

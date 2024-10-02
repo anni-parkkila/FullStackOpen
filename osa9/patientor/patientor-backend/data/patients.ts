@@ -110,6 +110,24 @@ const patients: Patient[] = [
       },
     ],
   },
+  {
+    id: "b17c7ce0-801c-11ef-9f54-8fdc61187fce",
+    name: "Ryunosuke Naruhodo",
+    dateOfBirth: "1877-01-01",
+    ssn: "010177-b221",
+    gender: Gender.Male,
+    occupation: "Ace Attorney",
+    entries: [
+      {
+        id: "4f5d0950-8024-11ef-a045-c5a201f3e31d",
+        type: "OccupationalHealthcare",
+        description: "Occupational health check",
+        date: "2024-10-01",
+        specialist: "Dr Hotti",
+        employerName: "Empire of Japan",
+      },
+    ],
+  },
 ];
 
 export default patients;
