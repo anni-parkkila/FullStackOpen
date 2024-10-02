@@ -100,9 +100,8 @@ export const toNewEntry = (object: unknown): NewEntry => {
           "sickLeave" in object &&
           typeof object.sickLeave === "object" &&
           object.sickLeave &&
-          "startDate" in object.sickLeave &&
-          "endDate" in object.sickLeave &&
-          (object.sickLeave.startDate === "" || object.sickLeave.endDate === "")
+          (!("startDate" in object.sickLeave) ||
+            !("endDate" in object.sickLeave))
         ) {
           throw new Error("Start or end date missing from sick leave");
         }

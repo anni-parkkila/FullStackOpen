@@ -13,6 +13,7 @@ import {
 import { EntryFormValues, EntryType } from "../../types";
 import HealthCheckForm from "./HealthCheckForm";
 import HospitalForm from "./HospitalForm";
+import OccupationalHealthcareForm from "./OccupationalForm";
 
 interface Props {
   onCancel: () => void;
@@ -42,6 +43,9 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
   const [healthCheckRating, setHealthCheckRating] = useState<number>(0);
   const [criteria, setCriteria] = useState("");
   const [dischargeDate, setDischargeDate] = useState("");
+  const [employerName, setEmployerName] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   const onEntryTypeChange = (event: SelectChangeEvent<string>) => {
     event.preventDefault();
@@ -55,7 +59,6 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
   };
 
   const selectedFormDetails = () => {
-    console.log("type", type);
     switch (type) {
       case "HealthCheck":
         return (
@@ -71,6 +74,17 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
             setCriteria={setCriteria}
             dischargeDate={dischargeDate}
             setDischargeDate={setDischargeDate}
+          />
+        );
+      case "OccupationalHealthcare":
+        return (
+          <OccupationalHealthcareForm
+            employerName={employerName}
+            setEmployerName={setEmployerName}
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
           />
         );
     }
@@ -108,6 +122,15 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
           },
         });
         break;
+      case "OccupationalHealthcare":
+        onSubmit({
+          ...baseEntry,
+          type,
+          employerName,
+          ...(startDate && endDate
+            ? { sickLeave: { startDate, endDate } }
+            : {}),
+        });
     }
   };
 

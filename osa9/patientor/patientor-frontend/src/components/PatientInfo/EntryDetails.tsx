@@ -58,6 +58,15 @@ const OccupationalEntryDetails = ({ entry }: OccupationalProps) => {
       <strong>{entry.date}</strong> <WorkIcon /> <em>{entry.employerName}</em>
       <br />
       <em>{entry.description}</em>
+      {entry.sickLeave && (
+        <div>
+          <h4>Sick leave:</h4>
+          <ul>
+            <li>Start date: {entry.sickLeave?.startDate}</li>
+            <li>End date: {entry.sickLeave?.endDate}</li>
+          </ul>
+        </div>
+      )}
       <br />
       diagnosis by {entry.specialist}
     </div>
