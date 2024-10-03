@@ -1,4 +1,4 @@
-import { InputLabel, TextField } from "@mui/material";
+import { Input, InputLabel, TextField } from "@mui/material";
 
 interface Props {
   employerName: string;
@@ -26,17 +26,20 @@ const OccupationalHealthcareForm = ({
         onChange={({ target }) => setEmployerName(target.value)}
       />
       <InputLabel style={{ marginTop: 20 }}>Sick leave</InputLabel>
-      <TextField
-        label="Start date"
-        placeholder="YYYY-MM-DD"
-        fullWidth
+      <InputLabel style={{ marginTop: 10, fontSize: "small" }}>
+        Start date
+      </InputLabel>
+      <Input
+        type="date"
+        aria-label="start"
         value={startDate}
         onChange={({ target }) => setStartDate(target.value)}
       />
-      <TextField
-        label="End date"
-        placeholder="YYYY-MM-DD"
-        fullWidth
+      <InputLabel style={{ marginTop: 10, fontSize: "small" }}>
+        End date
+      </InputLabel>
+      <Input
+        type="date"
         value={endDate}
         onChange={({ target }) => setEndDate(target.value)}
       />

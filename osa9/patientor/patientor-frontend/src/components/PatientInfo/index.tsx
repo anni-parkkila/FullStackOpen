@@ -99,6 +99,7 @@ const PatientInfoPage = ({ patient, diagnoses }: PatientProps) => {
           onSubmit={submitNewEntry}
           error={error}
           onClose={closeModal}
+          diagnoses={diagnoses}
         />
         <Button
           style={{ marginBottom: 10 }}

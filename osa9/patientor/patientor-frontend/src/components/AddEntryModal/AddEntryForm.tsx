@@ -2,6 +2,7 @@ import { useState, SyntheticEvent } from "react";
 
 import {
   TextField,
+  Input,
   InputLabel,
   MenuItem,
   Select,
@@ -10,14 +11,16 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 
-import { EntryFormValues, EntryType } from "../../types";
+import { Diagnosis, EntryFormValues, EntryType } from "../../types";
 import HealthCheckForm from "./HealthCheckForm";
 import HospitalForm from "./HospitalForm";
 import OccupationalHealthcareForm from "./OccupationalForm";
+import { DiagnosisField } from "./DiagnosisField";
 
 interface Props {
   onCancel: () => void;
   onSubmit: (values: EntryFormValues) => void;
+  diagnoses: Diagnosis[];
 }
 
 interface EntryTypeOption {
@@ -34,12 +37,12 @@ const entryTypeOptions: EntryTypeOption[] = Object.entries(EntryType).map(
   }
 );
 
-const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
+const AddEntryForm = ({ onCancel, onSubmit, diagnoses }: Props) => {
   const [type, setType] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
   const [specialist, setSpecialist] = useState("");
-  const [diagnosisCodes, setDiagnosisCodes] = useState("");
+  const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([]);
   const [healthCheckRating, setHealthCheckRating] = useState<number>(0);
   const [criteria, setCriteria] = useState("");
   const [dischargeDate, setDischargeDate] = useState("");
@@ -92,9 +95,7 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
 
   const addEntry = (event: SyntheticEvent) => {
     event.preventDefault();
-    const diagnosisCodesArray = diagnosisCodes
-      ? diagnosisCodes.split(", ")
-      : [];
+    const diagnosisCodesArray = diagnosisCodes ? diagnosisCodes : [];
 
     const baseEntry = {
       description,
@@ -156,10 +157,10 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
           value={description}
           onChange={({ target }) => setDescription(target.value)}
         />
-        <TextField
-          label="Date"
-          placeholder="YYYY-MM-DD"
-          fullWidth
+        <InputLabel style={{ marginTop: 20 }}>Visit date</InputLabel>
+        <Input
+          type="date"
+          style={{ marginBottom: 20 }}
           value={date}
           onChange={({ target }) => setDate(target.value)}
         />
@@ -169,11 +170,10 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
           value={specialist}
           onChange={({ target }) => setSpecialist(target.value)}
         />
-        <TextField
-          label="Diagnosis codes"
-          fullWidth
-          value={diagnosisCodes}
-          onChange={({ target }) => setDiagnosisCodes(target.value)}
+        <DiagnosisField
+          diagnoses={diagnoses}
+          diagnosisCodes={diagnosisCodes}
+          setDiagnosisCodes={setDiagnosisCodes}
         />
         {selectedFormDetails()}
         <Grid>
