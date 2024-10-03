@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Route, Link, Routes, useMatch } from "react-router-dom";
+import { Route, Link, Routes } from "react-router-dom";
 import { Button, Divider, Container, Typography } from "@mui/material";
 import "./App.css";
 
@@ -14,8 +14,6 @@ import PatientInfoPage from "./components/PatientInfo";
 
 const App = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
-  const [patient, setPatient] = useState<Patient>();
-  const match = useMatch("/patients/:id");
   const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([]);
 
   useEffect(() => {
@@ -33,16 +31,6 @@ const App = () => {
     };
     void fetchDiagnosesList();
   }, []);
-
-  useEffect(() => {
-    if (match && match.params.id) {
-      const findPatientInfo = async () => {
-        const patient = await patientService.getById(match.params.id);
-        setPatient(patient);
-      };
-      void findPatientInfo();
-    }
-  }, [match]);
 
   return (
     <div className="App">
@@ -63,9 +51,7 @@ const App = () => {
           />
           <Route
             path="/patients/:id"
-            element={
-              <PatientInfoPage patient={patient} diagnoses={diagnoses} />
-            }
+            element={<PatientInfoPage diagnoses={diagnoses} />}
           />
         </Routes>
       </Container>
