@@ -1,0 +1,8 @@
+.entryContainer {
+  border-style: solid;
+  border-color: rgb(168, 168, 168);
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 20px;
+  max-width: 80%;
+}

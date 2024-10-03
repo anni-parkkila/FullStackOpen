@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 import { z } from "zod";
 import patientService from "../services/patientService";
 import { NewPatient, Patient } from "../types";
-import { NewPatientSchema } from "../utils";
+import { NewPatientSchema, toNewEntry } from "../utils";
 
 const router = express.Router();
 
@@ -41,6 +41,22 @@ router.post(
     res.json(addedPatient);
   }
 );
+
+router.get("/:id", (req, res: Response<Patient>) => {
+  res.send(patientService.getPatientInfo(req.params.id));
+});
+
+router.post("/:id/entries", (req, res) => {
+  try {
+    const newEntry = toNewEntry(req.body);
+    const addedEntry = patientService.addNewEntry(req.params.id, newEntry);
+    res.json(addedEntry);
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(400).send(error.message);
+    }
+  }
+});
 
 router.use(errorMiddleware);
 
